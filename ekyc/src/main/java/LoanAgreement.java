@@ -132,20 +132,20 @@ public class LoanAgreement {
 			System.out.println(filename);
 			PdfReader reader;
 			PdfStamper stamper;
-			reader  = new PdfReader("../downloads/" + filename);
+			reader  = new PdfReader("/home/ubuntu/downloads/" + filename);
 			reader.unethicalreading = true;
-			stamper = new PdfStamper(reader, new FileOutputStream("../uploads/" + filename));
+			stamper = new PdfStamper(reader, new FileOutputStream("/home/ubuntu/uploads/" + filename));
 			BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED);
 			int total = reader.getNumberOfPages() + 1;
 			for (int l = 0; l <= 1; l++) {
 				if(l == 0) {
-					reader  = new PdfReader("../downloads/" + filename);
+					reader  = new PdfReader("/home/ubuntu/downloads/" + filename);
 					reader.unethicalreading = true;
-                                        stamper = new PdfStamper(reader, new FileOutputStream("../upload/" + filename));
+                                        stamper = new PdfStamper(reader, new FileOutputStream("/home/ubuntu/upload/" + filename));
 				} else {
-					reader  = new PdfReader("../upload/" + filename);
+					reader  = new PdfReader("/home/ubuntu/upload/" + filename);
                                         reader.unethicalreading = true;
-                                        stamper = new PdfStamper(reader, new FileOutputStream("../uploads/" + filename));
+                                        stamper = new PdfStamper(reader, new FileOutputStream("/home/ubuntu/uploads/" + filename));
 				}
 				PdfContentByte under, over;
 				String actualAnnotation = "";
@@ -224,16 +224,16 @@ public class LoanAgreement {
 		}
 
 		Document document = new Document();
-	        FileOutputStream outputStream = new FileOutputStream("../uploads/" + rid + ".pdf");
+	        FileOutputStream outputStream = new FileOutputStream("/home/ubuntu/uploads/" + rid + ".pdf");
         	PdfCopy copy = new PdfSmartCopy(document, outputStream);
 	        document.open();
         	for (String fil: all_files) {
-            		PdfReader reader = new PdfReader("../uploads/" + fil);
+            		PdfReader reader = new PdfReader("/home/ubuntu/uploads/" + fil);
             		copy.addDocument(reader);
             		reader.close();
         	}
 	        document.close();
-		Process p1=Runtime.getRuntime().exec("scp ../uploads/" + rid + ".pdf" + " ubuntu@172.31.19.74:/home/ubuntu/automated_deployment/indifi_source/arya/uploads/");
+		Process p1=Runtime.getRuntime().exec("scp /home/ubuntu/uploads/" + rid + ".pdf" + " ubuntu@172.31.19.74:/home/ubuntu/automated_deployment/indifi_source/arya/uploads/");
                 int exitValue = p1.waitFor();
 		BufferedReader stdError = new BufferedReader(new 
      InputStreamReader(p1.getErrorStream()));

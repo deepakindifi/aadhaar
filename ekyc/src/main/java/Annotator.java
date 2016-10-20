@@ -138,16 +138,16 @@ public class Annotator {
 			}
 			Document document = new Document();
 			String format = image_files[i].substring(image_files[i].lastIndexOf(".")+1);
-			PdfWriter.getInstance(document, new FileOutputStream("../downloads/" + image_files[i].replace(format,"pdf")));
+			PdfWriter.getInstance(document, new FileOutputStream("/home/ubuntu/downloads/" + image_files[i].replace(format,"pdf")));
 			document.open();
-			Image img = Image.getInstance("../downloads/" + image_files[i]);
+			Image img = Image.getInstance("/home/ubuntu/downloads/" + image_files[i]);
 			float scaler = ((document.getPageSize().getWidth() - document.leftMargin() - document.rightMargin()) / img.getWidth()) * 100;
 			img.scalePercent(scaler);
 			document.add(img);
 			document.close();
 		}
 		int pageCount = 2;
-		Image sign = Image.getInstance("signature.png");
+		Image sign = Image.getInstance("src/main/resources/signature.png");
 		sign.scalePercent(70);
 		for(i = 0; i < all_files.length; i++) {
 			try {
@@ -168,13 +168,13 @@ public class Annotator {
 				PdfReader reader;
 				PdfStamper stamper;
 				if(k == 0) {
-					reader  = new PdfReader("../downloads/" + filename);
+					reader  = new PdfReader("/home/ubuntu/downloads/" + filename);
 					reader.unethicalreading = true;
-					stamper = new PdfStamper(reader, new FileOutputStream("../upload/" + filename));
+					stamper = new PdfStamper(reader, new FileOutputStream("/home/ubuntu/upload/" + filename));
 				} else {
-					reader  = new PdfReader("../upload/" + filename);
+					reader  = new PdfReader("/home/ubuntu/upload/" + filename);
 					reader.unethicalreading = true;
-					stamper = new PdfStamper(reader, new FileOutputStream("../uploads/" + filename));
+					stamper = new PdfStamper(reader, new FileOutputStream("/home/ubuntu/uploads/" + filename));
 				} 
 				BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED);
 				PdfContentByte under, over;
@@ -239,8 +239,8 @@ public class Annotator {
 				}
 				stamper.close();
 			}
-			Process p=Runtime.getRuntime().exec("scp ../uploads/" + filename + " ubuntu@172.31.19.74:/home/ubuntu/automated_deployment/indifi_source/arya/uploads/"); 
-			//Process p=Runtime.getRuntime().exec("cp ../uploads/" + filename + "/Users/agarwal/arya/core/lib/uploads/");
+			Process p=Runtime.getRuntime().exec("scp /home/ubuntu/uploads/" + filename + " ubuntu@172.31.19.74:/home/ubuntu/automated_deployment/indifi_source/arya/uploads/"); 
+			//Process p=Runtime.getRuntime().exec("cp /home/ubuntu/uploads/" + filename + "/Users/agarwal/arya/core/lib/uploads/");
 			p.waitFor();
 			} catch(Exception ex) {
 				all_files[i] = null;
@@ -251,13 +251,13 @@ public class Annotator {
 		if(pending_documents.length() != 0) {
 			html = html + pending_documents_html + "<tr><td>1</td><td>Copy of Last 6 Months Bank Statement on Bank Letter Head</td><td>" + borrower_name + "</td><td>"  + borrower_annotation + "</td></tr></table></div>";
 		}
-		PrintWriter out = new PrintWriter("../uploads/" + rid + ".html");
+		PrintWriter out = new PrintWriter("/home/ubuntu/uploads/" + rid + ".html");
 		out.println(html);
 		out.close();
-		Process p=Runtime.getRuntime().exec("scp ../uploads/" + rid + ".html" + " ubuntu@172.31.19.74:/home/ubuntu/automated_deployment/indifi_source/arya/uploads/");
+		Process p=Runtime.getRuntime().exec("scp /home/ubuntu/uploads/" + rid + ".html" + " ubuntu@172.31.19.74:/home/ubuntu/automated_deployment/indifi_source/arya/uploads/");
 		p.waitFor();
 		Document document = new Document();
-        FileOutputStream outputStream = new FileOutputStream("../uploads/" + rid + ".pdf");
+        FileOutputStream outputStream = new FileOutputStream("/home/ubuntu/uploads/" + rid + ".pdf");
         PdfCopy copy = new PdfSmartCopy(document, outputStream);
         document.open();
         for (String fil: all_files) {
@@ -274,12 +274,12 @@ public class Annotator {
 		finalExt = "pdf";
 	    }
             System.out.println(finalExt);
-            PdfReader reader = new PdfReader("../uploads/" + fil.replaceAll(ext,finalExt));
+            PdfReader reader = new PdfReader("/home/ubuntu/uploads/" + fil.replaceAll(ext,finalExt));
             copy.addDocument(reader);
             reader.close();
         }
         document.close();
-	Process p1=Runtime.getRuntime().exec("scp ../uploads/" + rid + ".pdf" + " ubuntu@172.31.19.74:/home/ubuntu/automated_deployment/indifi_source/arya/uploads/");
+	Process p1=Runtime.getRuntime().exec("scp /home/ubuntu/uploads/" + rid + ".pdf" + " ubuntu@172.31.19.74:/home/ubuntu/automated_deployment/indifi_source/arya/uploads/");
                 p1.waitFor();
 		String[] response = {"",rid};
 		return response;
