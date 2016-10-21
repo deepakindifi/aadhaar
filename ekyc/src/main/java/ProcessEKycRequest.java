@@ -94,7 +94,7 @@ public final class ProcessEKycRequest {
 		Reference ref = fac.newReference("", fac.newDigestMethod(DigestMethod.SHA1, null),Collections.singletonList(fac.newTransform(Transform.ENVELOPED, (TransformParameterSpec) null)),null, null);
 		SignedInfo si = fac.newSignedInfo(fac.newCanonicalizationMethod(CanonicalizationMethod.INCLUSIVE,(C14NMethodParameterSpec) null),fac.newSignatureMethod(SignatureMethod.RSA_SHA1, null),Collections.singletonList(ref));
 		KeyStore ks = KeyStore.getInstance("JKS");
-		ks.load(new FileInputStream("indifi"), "Alok@1nd1f1".toCharArray());
+		ks.load(new FileInputStream("src/main/resources/indifi"), "Alok@1nd1f1".toCharArray());
 		KeyStore.PrivateKeyEntry keyEntry =(KeyStore.PrivateKeyEntry) ks.getEntry("le-dd665bdc-a4ab-423a-9ecc-f777be44ea13", new KeyStore.PasswordProtection("emudhra".toCharArray()));
 	
 		X509Certificate cert = (X509Certificate) keyEntry.getCertificate();
@@ -162,7 +162,7 @@ public final class ProcessEKycRequest {
 		String payload = (String)jsObj.get("xml");
 		//String payload = "%skey%\n%hmac%\n%pid%";
         CertificateFactory certFactory = CertificateFactory.getInstance(CERTIFICATE_TYPE, JCE_PROVIDER);
-        FileInputStream fileInputStream = new FileInputStream(new File("session.pem"));
+        FileInputStream fileInputStream = new FileInputStream(new File("src/main/resources/session.pem"));
         X509Certificate cert = (X509Certificate) certFactory.generateCertificate(fileInputStream);
         PublicKey publicKey = cert.getPublicKey();
         Date certExpiryDate = cert.getNotAfter();
