@@ -13,7 +13,7 @@ public class ReceiveRequest {
     Channel channel = null;
     try {
       ConnectionFactory factory = new ConnectionFactory();
-      factory.setHost("172.31.19.74");
+      factory.setHost("172.31.24.8");
       factory.setUsername("test");
       factory.setPassword("test");
       connection = factory.newConnection();
@@ -43,7 +43,7 @@ public class ReceiveRequest {
     ProcessEKycRequest req = new ProcessEKycRequest(); 
     ConnectionFactory factory = new ConnectionFactory();
 	System.out.println("trying to connec");
-    factory.setHost("172.31.19.74");
+    factory.setHost("172.31.24.8");
     factory.setUsername("test");
 	System.out.println("connected");
     factory.setPassword("test");
