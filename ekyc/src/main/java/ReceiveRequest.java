@@ -16,6 +16,8 @@ public class ReceiveRequest {
       factory.setHost("172.31.24.8");
       factory.setUsername("test");
       factory.setPassword("test");
+      factory.setAutomaticRecoveryEnabled(true);
+      factory.setTopologyRecoveryEnabled(true);
       connection = factory.newConnection();
       channel = connection.createChannel();
 
@@ -47,6 +49,8 @@ public class ReceiveRequest {
     factory.setUsername("test");
 	System.out.println("connected");
     factory.setPassword("test");
+      factory.setAutomaticRecoveryEnabled(true);
+      factory.setTopologyRecoveryEnabled(true);
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
 
