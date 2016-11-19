@@ -233,7 +233,7 @@ public class LoanAgreement {
             		reader.close();
         	}
 	        document.close();
-		Process p1=Runtime.getRuntime().exec("scp /home/ubuntu/uploads/" + rid + ".pdf" + " ubuntu@172.31.19.74:/home/ubuntu/automated_deployment/indifi_source/arya/uploads/");
+		Process p1=Runtime.getRuntime().exec("scp /home/ubuntu/uploads/" + rid + ".pdf" + " ubuntu@10.0.3.68:/home/ubuntu/automated_deployment/indifi_source/arya/uploads/");
                 int exitValue = p1.waitFor();
 		BufferedReader stdError = new BufferedReader(new 
      InputStreamReader(p1.getErrorStream()));

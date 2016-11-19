@@ -239,7 +239,7 @@ public class Annotator {
 				}
 				stamper.close();
 			}
-			Process p=Runtime.getRuntime().exec("scp /home/ubuntu/uploads/" + filename + " ubuntu@172.31.19.74:/home/ubuntu/automated_deployment/indifi_source/arya/uploads/"); 
+			Process p=Runtime.getRuntime().exec("scp /home/ubuntu/uploads/" + filename + " ubuntu@10.0.3.68:/home/ubuntu/automated_deployment/indifi_source/arya/uploads/"); 
 			//Process p=Runtime.getRuntime().exec("cp /home/ubuntu/uploads/" + filename + "/Users/agarwal/arya/core/lib/uploads/");
 			p.waitFor();
 			} catch(Exception ex) {
@@ -254,7 +254,7 @@ public class Annotator {
 		PrintWriter out = new PrintWriter("/home/ubuntu/uploads/" + rid + ".html");
 		out.println(html);
 		out.close();
-		Process p=Runtime.getRuntime().exec("scp /home/ubuntu/uploads/" + rid + ".html" + " ubuntu@172.31.19.74:/home/ubuntu/automated_deployment/indifi_source/arya/uploads/");
+		Process p=Runtime.getRuntime().exec("scp /home/ubuntu/uploads/" + rid + ".html" + " ubuntu@10.0.3.68:/home/ubuntu/automated_deployment/indifi_source/arya/uploads/");
 		p.waitFor();
 		Document document = new Document();
         FileOutputStream outputStream = new FileOutputStream("/home/ubuntu/uploads/" + rid + ".pdf");
@@ -279,7 +279,7 @@ public class Annotator {
             reader.close();
         }
         document.close();
-	Process p1=Runtime.getRuntime().exec("scp /home/ubuntu/uploads/" + rid + ".pdf" + " ubuntu@172.31.19.74:/home/ubuntu/automated_deployment/indifi_source/arya/uploads/");
+	Process p1=Runtime.getRuntime().exec("scp /home/ubuntu/uploads/" + rid + ".pdf" + " ubuntu@10.0.3.68:/home/ubuntu/automated_deployment/indifi_source/arya/uploads/");
                 p1.waitFor();
 		String[] response = {"",rid};
 		return response;
