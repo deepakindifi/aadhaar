@@ -5,8 +5,6 @@ version := "1.0"
 scalaVersion := "2.11.8"
 
 libraryDependencies ++= Seq(
-  "org.bouncycastle" % "bcprov-jdk16" % "1.43",
-  "org.bouncycastle" % "bctsp-jdk16" % "1.44",
   "commons-io" % "commons-io" % "2.4",
   "com.itextpdf" % "itextpdf" % "5.5.4",
   "log4j" % "log4j" % "1.2.17",
