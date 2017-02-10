@@ -1,17 +1,17 @@
-import com.rabbitmq.client.*;
-import org.json.simple.*;
-import java.awt.Color;
-import org.json.simple.parser.*;
-import java.io.*;
-import java.io.IOException;
+  import com.rabbitmq.client.*;
+  import org.json.simple.*;
+  import java.awt.Color;
+  import org.json.simple.parser.*;
+  import java.io.*;
+  import java.io.IOException;
 
-public class ReceiveRequest {
-  private static final String EXCHANGE_NAME = "indifi_durable";
+  public class ReceiveRequest {
+    private static final String EXCHANGE_NAME = "indifi_durable";
 
-  public static void sendResponse(String message, String key) {
-	Connection connection = null;
-    Channel channel = null;
-    try {
+    public static void sendResponse(String message, String key) {
+     Connection connection = null;
+     Channel channel = null;
+     try {
       ConnectionFactory factory = new ConnectionFactory();
       factory.setHost("10.0.3.9");
       factory.setUsername("test");
@@ -44,13 +44,13 @@ public class ReceiveRequest {
   public static void main(String[] argv) throws Exception {
     ProcessEKycRequest req = new ProcessEKycRequest(); 
     ConnectionFactory factory = new ConnectionFactory();
-	System.out.println("trying to connec");
+    System.out.println("trying to connec");
     factory.setHost("10.0.3.9");
     factory.setUsername("test");
-	System.out.println("connected");
+    System.out.println("connected");
     factory.setPassword("test");
-      factory.setAutomaticRecoveryEnabled(true);
-      factory.setTopologyRecoveryEnabled(true);
+    factory.setAutomaticRecoveryEnabled(true);
+    factory.setTopologyRecoveryEnabled(true);
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
 
@@ -66,44 +66,50 @@ public class ReceiveRequest {
     Consumer consumer = new DefaultConsumer(channel) {
       @Override
       public void handleDelivery(String consumerTag, Envelope envelope,
-                                 AMQP.BasicProperties properties, byte[] body) throws IOException {
+       AMQP.BasicProperties properties, byte[] body) throws IOException {
 
-		System.out.println("message received");
-		String message = new String(body, "UTF-8");
+        System.out.println("message received");
+        String message = new String(body, "UTF-8");
 
-		if(envelope.getRoutingKey().equals("ekyc_call")) {
-			ProcessEKycRequest req = new ProcessEKycRequest();
-			System.out.println("called"+ message);
-			String[] response = req.generateEncryptedPayload(message);
-			ReceiveRequest.sendResponse(response[0],response[1]);
-		} else if(envelope.getRoutingKey().equals("loan_agreement")) {
-			LoanAgreement loanAgreement = new LoanAgreement();
-			try {
-                                System.out.println("processing loan agreement");
-                                String[] response = loanAgreement.annotate(message);
-                                System.out.println("processed");
-                                ReceiveRequest.sendResponse(response[0],response[1]);
-                        }catch(Exception Ex) {
-                                System.out.println("accepted the error");
-                                System.out.println(Ex);
-                        }
-		} else {
-			Annotator annotator = new Annotator();
-			try {
-				System.out.println("processing");
-				String[] response = annotator.annotate(message);
-				System.out.println("processed");
-				ReceiveRequest.sendResponse(response[0],response[1]);
-			}catch(Exception Ex) {
-				System.out.println("accepted");
-				System.out.println(Ex);
-			}
-		}
-		   			
-        System.out.println(" [x] Received '" + envelope.getRoutingKey() + "'");
-	
+        if(envelope.getRoutingKey().equals("ekyc_call")) {
+         ProcessEKycRequest req = new ProcessEKycRequest();
+         System.out.println("called"+ message);
+         String[] response = req.generateEncryptedPayload(message);
+         ReceiveRequest.sendResponse(response[0],response[1]);
+       } else if(envelope.getRoutingKey().equals("loan_agreement")) {
+         LoanAgreement loanAgreement = new LoanAgreement();
+         try {
+          System.out.println("processing loan agreement");
+          String[] response = loanAgreement.annotate(message);
+          System.out.println("processed");
+          ReceiveRequest.sendResponse(response[0],response[1]);
+        }catch(Exception Ex) {
+          System.out.println("accepted the error");
+          System.out.println(Ex);
+        }
+      } else if(envelope.getRoutingKey().equals("esign_call")) {
+         ProcessEKycRequest req = new ProcessEKycRequest();
+         System.out.println("called"+ message);
+         String[] response = req.generateEncryptedPayload(message);
+         ReceiveRequest.sendResponse(response[0],response[1]);
+      } 
+      else {
+       Annotator annotator = new Annotator();
+       try {
+        System.out.println("processing");
+        String[] response = annotator.annotate(message);
+        System.out.println("processed");
+        ReceiveRequest.sendResponse(response[0],response[1]);
+      }catch(Exception Ex) {
+        System.out.println("accepted");
+        System.out.println(Ex);
       }
-    };
-    channel.basicConsume(queueName, true, consumer);
+    }
+
+    System.out.println(" [x] Received '" + envelope.getRoutingKey() + "'");
+
   }
+};
+channel.basicConsume(queueName, true, consumer);
+}
 }
