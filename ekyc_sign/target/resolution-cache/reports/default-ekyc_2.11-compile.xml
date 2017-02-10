@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="ivy-report.xsl"?>
+<ivy-report version="1.0">
+	<info
+		organisation="default"
+		module="ekyc_2.11"
+		revision="1.0"
+		conf="compile"
+		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
+		date="20161020152511"/>
+	<dependencies>
+		<module organisation="commons-logging" name="commons-logging">
+			<revision name="1.1.1" status="release" pubdate="20071127015410" resolver="public" artresolver="public" homepage="http://commons.apache.org/logging" downloaded="true" searched="true" default="false" conf="default, compile, runtime, default(compile), master, runtime(*), master(compile), compile(*)" position="11">
+				<license name="The Apache Software License, Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
+				<metadata-artifact status="successful" details="" size="18365" time="1988" location="/Users/agarwal/.ivy2/cache/commons-logging/commons-logging/ivy-1.1.1.xml" searched="true" original-local-location="/Users/agarwal/.ivy2/cache/commons-logging/commons-logging/ivy-1.1.1.xml.original" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.pom"/>
+				<caller organisation="org.apache.santuario" name="xmlsec" conf="default, compile, runtime, master" rev="1.1" rev-constraint-default="1.1" rev-constraint-dynamic="1.1" callerrev="1.4.3"/>
+				<caller organisation="default" name="ekyc_2.11" conf="compile" rev="1.1.1" rev-constraint-default="1.1.1" rev-constraint-dynamic="1.1.1" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="commons-logging" type="jar" ext="jar" status="successful" details="" size="60686" time="2639" location="/Users/agarwal/.ivy2/cache/commons-logging/commons-logging/jars/commons-logging-1.1.1.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+			<revision name="1.1" evicted="latest-revision" evicted-reason="" downloaded="false" searched="false" conf="runtime(*), master(compile), compile(*)" position="-1">
+				<evicted-by rev="1.1.1"/>
+				<caller organisation="org.apache.santuario" name="xmlsec" conf="default, compile, runtime, master" rev="1.1" rev-constraint-default="1.1" rev-constraint-dynamic="1.1" callerrev="1.4.3"/>
+				<artifacts>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="javax.persistence" name="persistence-api">
+			<revision name="1.0" status="release" pubdate="20060823011912" resolver="public" artresolver="public" homepage="http://www.jcp.org/en/jsr/detail?id=220" downloaded="true" searched="true" default="false" conf="default, compile, runtime, default(compile), master" position="10">
+				<license name="Common Development and Distribution License (CDDL) v1.0" url="http://www.sun.com/cddl/cddl.html"/>
+				<metadata-artifact status="successful" details="" size="1307" time="671" location="/Users/agarwal/.ivy2/cache/javax.persistence/persistence-api/ivy-1.0.xml" searched="true" original-local-location="/Users/agarwal/.ivy2/cache/javax.persistence/persistence-api/ivy-1.0.xml.original" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/javax/persistence/persistence-api/1.0/persistence-api-1.0.pom"/>
+				<caller organisation="default" name="ekyc_2.11" conf="compile" rev="1.0" rev-constraint-default="1.0" rev-constraint-dynamic="1.0" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="persistence-api" type="jar" ext="jar" status="successful" details="" size="52150" time="5725" location="/Users/agarwal/.ivy2/cache/javax.persistence/persistence-api/jars/persistence-api-1.0.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/javax/persistence/persistence-api/1.0/persistence-api-1.0.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="commons-codec" name="commons-codec">
+			<revision name="1.4" status="release" pubdate="20090810024603" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://commons.apache.org/codec/" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="9">
+				<metadata-artifact status="no" details="" size="4990" time="0" location="/Users/agarwal/.ivy2/cache/commons-codec/commons-codec/ivy-1.4.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/commons-codec/commons-codec/1.4/commons-codec-1.4.pom"/>
+				<caller organisation="default" name="ekyc_2.11" conf="compile" rev="1.4" rev-constraint-default="1.4" rev-constraint-dynamic="1.4" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="commons-codec" type="jar" ext="jar" status="no" details="" size="58160" time="0" location="/Users/agarwal/.ivy2/cache/commons-codec/commons-codec/jars/commons-codec-1.4.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/commons-codec/commons-codec/1.4/commons-codec-1.4.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.apache.santuario" name="xmlsec">
+			<revision name="1.4.3" status="release" pubdate="20090723201700" resolver="public" artresolver="public" homepage="http://santuario.apache.org/" downloaded="true" searched="true" default="false" conf="default, compile, runtime, default(compile), master" position="7">
+				<license name="The Apache Software License, Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
+				<metadata-artifact status="successful" details="" size="10203" time="1259" location="/Users/agarwal/.ivy2/cache/org.apache.santuario/xmlsec/ivy-1.4.3.xml" searched="true" original-local-location="/Users/agarwal/.ivy2/cache/org.apache.santuario/xmlsec/ivy-1.4.3.xml.original" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/apache/santuario/xmlsec/1.4.3/xmlsec-1.4.3.pom"/>
+				<caller organisation="default" name="ekyc_2.11" conf="compile" rev="1.4.3" rev-constraint-default="1.4.3" rev-constraint-dynamic="1.4.3" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="xmlsec" type="bundle" ext="jar" status="successful" details="" size="447633" time="2302" location="/Users/agarwal/.ivy2/cache/org.apache.santuario/xmlsec/bundles/xmlsec-1.4.3.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/apache/santuario/xmlsec/1.4.3/xmlsec-1.4.3.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="log4j" name="log4j">
+			<revision name="1.2.17" status="release" pubdate="20120526151339" resolver="public" artresolver="public" homepage="http://logging.apache.org/log4j/1.2/" downloaded="true" searched="true" default="false" conf="default, compile, runtime, default(compile), master" position="6">
+				<license name="The Apache Software License, Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
+				<metadata-artifact status="successful" details="" size="21745" time="1407" location="/Users/agarwal/.ivy2/cache/log4j/log4j/ivy-1.2.17.xml" searched="true" original-local-location="/Users/agarwal/.ivy2/cache/log4j/log4j/ivy-1.2.17.xml.original" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/log4j/log4j/1.2.17/log4j-1.2.17.pom"/>
+				<caller organisation="default" name="ekyc_2.11" conf="compile" rev="1.2.17" rev-constraint-default="1.2.17" rev-constraint-dynamic="1.2.17" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="log4j" type="bundle" ext="jar" status="successful" details="" size="489884" time="2761" location="/Users/agarwal/.ivy2/cache/log4j/log4j/bundles/log4j-1.2.17.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/log4j/log4j/1.2.17/log4j-1.2.17.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="com.itextpdf" name="itextpdf">
+			<revision name="5.3.2" status="release" pubdate="20120822150244" resolver="public" artresolver="public" homepage="http://www.itextpdf.com/" downloaded="true" searched="true" default="false" conf="default, compile, runtime, default(compile), master" position="5">
+				<license name="GNU Affero General Public License v3" url="http://www.fsf.org/licensing/licenses/agpl-3.0.html"/>
+				<metadata-artifact status="successful" details="" size="5525" time="1784" location="/Users/agarwal/.ivy2/cache/com.itextpdf/itextpdf/ivy-5.3.2.xml" searched="true" original-local-location="/Users/agarwal/.ivy2/cache/com.itextpdf/itextpdf/ivy-5.3.2.xml.original" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/com/itextpdf/itextpdf/5.3.2/itextpdf-5.3.2.pom"/>
+				<caller organisation="default" name="ekyc_2.11" conf="compile" rev="5.3.2" rev-constraint-default="5.3.2" rev-constraint-dynamic="5.3.2" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="itextpdf" type="jar" ext="jar" status="successful" details="" size="1775496" time="9266" location="/Users/agarwal/.ivy2/cache/com.itextpdf/itextpdf/jars/itextpdf-5.3.2.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/itextpdf/itextpdf/5.3.2/itextpdf-5.3.2.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.bouncycastle" name="bcprov-jdk15on">
+			<revision name="1.47" status="release" pubdate="20120327062412" resolver="public" artresolver="public" homepage="http://www.bouncycastle.org/java.html" downloaded="true" searched="true" default="false" conf="default, compile, runtime, default(compile), master" position="8">
+				<license name="Bouncy Castle Licence" url="http://www.bouncycastle.org/licence.html"/>
+				<metadata-artifact status="successful" details="" size="832" time="641" location="/Users/agarwal/.ivy2/cache/org.bouncycastle/bcprov-jdk15on/ivy-1.47.xml" searched="true" original-local-location="/Users/agarwal/.ivy2/cache/org.bouncycastle/bcprov-jdk15on/ivy-1.47.xml.original" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.47/bcprov-jdk15on-1.47.pom"/>
+				<caller organisation="default" name="ekyc_2.11" conf="compile" rev="1.47" rev-constraint-default="1.47" rev-constraint-dynamic="1.47" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="bcprov-jdk15on" type="jar" ext="jar" status="successful" details="" size="1997327" time="39801" location="/Users/agarwal/.ivy2/cache/org.bouncycastle/bcprov-jdk15on/jars/bcprov-jdk15on-1.47.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.47/bcprov-jdk15on-1.47.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="commons-io" name="commons-io">
+			<revision name="2.4" status="release" pubdate="20120613035206" resolver="public" artresolver="public" homepage="http://commons.apache.org/io/" downloaded="true" searched="true" default="false" conf="default, compile, runtime, default(compile), master" position="4">
+				<license name="The Apache Software License, Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
+				<metadata-artifact status="successful" details="" size="10166" time="854" location="/Users/agarwal/.ivy2/cache/commons-io/commons-io/ivy-2.4.xml" searched="true" original-local-location="/Users/agarwal/.ivy2/cache/commons-io/commons-io/ivy-2.4.xml.original" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/commons-io/commons-io/2.4/commons-io-2.4.pom"/>
+				<caller organisation="default" name="ekyc_2.11" conf="compile" rev="2.4" rev-constraint-default="2.4" rev-constraint-dynamic="2.4" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="commons-io" type="jar" ext="jar" status="successful" details="" size="185140" time="9924" location="/Users/agarwal/.ivy2/cache/commons-io/commons-io/jars/commons-io-2.4.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/commons-io/commons-io/2.4/commons-io-2.4.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.bouncycastle" name="bctsp-jdk16">
+			<revision name="1.44" status="release" pubdate="20091007040035" resolver="public" artresolver="public" homepage="http://www.bouncycastle.org/java.html" downloaded="true" searched="true" default="false" conf="default, compile, runtime, default(compile), master" position="1">
+				<license name="Bouncy Castle Licence" url="http://www.bouncycastle.org/licence.html"/>
+				<metadata-artifact status="successful" details="" size="1254" time="1247" location="/Users/agarwal/.ivy2/cache/org.bouncycastle/bctsp-jdk16/ivy-1.44.xml" searched="true" original-local-location="/Users/agarwal/.ivy2/cache/org.bouncycastle/bctsp-jdk16/ivy-1.44.xml.original" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/bouncycastle/bctsp-jdk16/1.44/bctsp-jdk16-1.44.pom"/>
+				<caller organisation="default" name="ekyc_2.11" conf="compile" rev="1.44" rev-constraint-default="1.44" rev-constraint-dynamic="1.44" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="bctsp-jdk16" type="jar" ext="jar" status="successful" details="" size="25392" time="2287" location="/Users/agarwal/.ivy2/cache/org.bouncycastle/bctsp-jdk16/jars/bctsp-jdk16-1.44.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/bouncycastle/bctsp-jdk16/1.44/bctsp-jdk16-1.44.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.bouncycastle" name="bcmail-jdk16">
+			<revision name="1.44" status="release" pubdate="20091007040010" resolver="public" artresolver="public" homepage="http://www.bouncycastle.org/java.html" downloaded="true" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="3">
+				<license name="Bouncy Castle Licence" url="http://www.bouncycastle.org/licence.html"/>
+				<metadata-artifact status="successful" details="" size="1210" time="815" location="/Users/agarwal/.ivy2/cache/org.bouncycastle/bcmail-jdk16/ivy-1.44.xml" searched="true" original-local-location="/Users/agarwal/.ivy2/cache/org.bouncycastle/bcmail-jdk16/ivy-1.44.xml.original" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/bouncycastle/bcmail-jdk16/1.44/bcmail-jdk16-1.44.pom"/>
+				<caller organisation="org.bouncycastle" name="bctsp-jdk16" conf="default, compile, runtime, master" rev="1.44" rev-constraint-default="1.44" rev-constraint-dynamic="1.44" callerrev="1.44"/>
+				<artifacts>
+					<artifact name="bcmail-jdk16" type="jar" ext="jar" status="successful" details="" size="232988" time="2838" location="/Users/agarwal/.ivy2/cache/org.bouncycastle/bcmail-jdk16/jars/bcmail-jdk16-1.44.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/bouncycastle/bcmail-jdk16/1.44/bcmail-jdk16-1.44.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.bouncycastle" name="bcprov-jdk16">
+			<revision name="1.44" status="release" pubdate="20091007035940" resolver="public" artresolver="public" homepage="http://www.bouncycastle.org/java.html" downloaded="true" searched="true" default="false" conf="default, compile, runtime(*), master(compile), runtime, compile(*), master, default(compile)" position="2">
+				<license name="Bouncy Castle Licence" url="http://www.bouncycastle.org/licence.html"/>
+				<metadata-artifact status="successful" details="" size="819" time="805" location="/Users/agarwal/.ivy2/cache/org.bouncycastle/bcprov-jdk16/ivy-1.44.xml" searched="true" original-local-location="/Users/agarwal/.ivy2/cache/org.bouncycastle/bcprov-jdk16/ivy-1.44.xml.original" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk16/1.44/bcprov-jdk16-1.44.pom"/>
+				<caller organisation="default" name="ekyc_2.11" conf="compile" rev="1.43" rev-constraint-default="1.43" rev-constraint-dynamic="1.43" callerrev="1.0"/>
+				<caller organisation="org.bouncycastle" name="bctsp-jdk16" conf="default, compile, runtime, master" rev="1.44" rev-constraint-default="1.44" rev-constraint-dynamic="1.44" callerrev="1.44"/>
+				<caller organisation="org.bouncycastle" name="bcmail-jdk16" conf="compile, runtime" rev="1.44" rev-constraint-default="1.44" rev-constraint-dynamic="1.44" callerrev="1.44"/>
+				<artifacts>
+					<artifact name="bcprov-jdk16" type="jar" ext="jar" status="successful" details="" size="1699426" time="24732" location="/Users/agarwal/.ivy2/cache/org.bouncycastle/bcprov-jdk16/jars/bcprov-jdk16-1.44.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk16/1.44/bcprov-jdk16-1.44.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+			<revision name="1.43" status="release" pubdate="20090610120951" resolver="public" artresolver="public" evicted="latest-revision" evicted-reason="" homepage="http://www.bouncycastle.org/java.html" downloaded="true" searched="true" default="false" conf="default, compile, runtime, default(compile), master" position="-1">
+				<license name="Bouncy Castle Licence" url="http://www.bouncycastle.org/licence.html"/>
+				<metadata-artifact status="successful" details="" size="819" time="733" location="/Users/agarwal/.ivy2/cache/org.bouncycastle/bcprov-jdk16/ivy-1.43.xml" searched="true" original-local-location="/Users/agarwal/.ivy2/cache/org.bouncycastle/bcprov-jdk16/ivy-1.43.xml.original" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk16/1.43/bcprov-jdk16-1.43.pom"/>
+				<evicted-by rev="1.44"/>
+				<caller organisation="default" name="ekyc_2.11" conf="compile" rev="1.43" rev-constraint-default="1.43" rev-constraint-dynamic="1.43" callerrev="1.0"/>
+				<artifacts>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.scala-lang" name="scala-library">
+			<revision name="2.11.8" status="release" pubdate="20160309094604" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scala-lang.org/" extra-info.apiURL="http://www.scala-lang.org/api/2.11.8/" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="0">
+				<license name="BSD 3-Clause" url="http://www.scala-lang.org/license.html"/>
+				<metadata-artifact status="no" details="" size="2653" time="0" location="/Users/agarwal/.ivy2/cache/org.scala-lang/scala-library/ivy-2.11.8.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/org/scala-lang/scala-library/2.11.8/scala-library-2.11.8.pom"/>
+				<caller organisation="default" name="ekyc_2.11" conf="compile" rev="2.11.8" rev-constraint-default="2.11.8" rev-constraint-dynamic="2.11.8" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="scala-library" type="jar" ext="jar" status="no" details="" size="5744974" time="0" location="/Users/agarwal/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.11.8.jar">
+						<origin-location is-local="false" location="https://jcenter.bintray.com/org/scala-lang/scala-library/2.11.8/scala-library-2.11.8.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+	</dependencies>
+</ivy-report>
