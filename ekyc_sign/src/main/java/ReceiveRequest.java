@@ -15,7 +15,7 @@
      Channel channel = null;
      try {
       ConnectionFactory factory = new ConnectionFactory();
-      factory.setHost("10.0.3.9");
+      factory.setHost("localhost");
       factory.setUsername("test");
       factory.setPassword("test");
       factory.setAutomaticRecoveryEnabled(true);
@@ -47,7 +47,7 @@
     ProcessEKycRequest req = new ProcessEKycRequest(); 
     ConnectionFactory factory = new ConnectionFactory();
     System.out.println("trying to connec");
-    factory.setHost("10.0.3.9");
+    factory.setHost("localhost");
     factory.setUsername("test");
     System.out.println("connected");
     factory.setPassword("test");
@@ -90,10 +90,11 @@
           System.out.println(Ex);
         }
       } else if(envelope.getRoutingKey().equals("esign_call")) {
-         ProcessEKycRequest req = new ProcessEKycRequest();
+         ProcessESignRequest req = new ProcessESignRequest();
          System.out.println("called"+ message);
-         String[] response = req.generateEncryptedPayload(message);
-         ReceiveRequest.sendResponse(response[0],response[1]);
+         JSONObject response = req.esign(message);
+	System.out.println(response.toString());
+         ReceiveRequest.sendResponse(response.toString(),"process_esign_response");
       } 
       else {
        Annotator annotator = new Annotator();

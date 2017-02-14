@@ -18,9 +18,11 @@ public final class ProcessESignRequest {
     }
 
     public static JSONObject esign(String payload) {
+	JSONObject response = new JSONObject();
+	String pid = "";
         try {
             JSONObject jsObj = ProcessESignRequest.decodeJson(payload);
-            String pid = (String) jsObj.get("pid");
+            pid = (String) jsObj.get("pid");
             String auth = (String) jsObj.get("auth");
             String otp = (String) jsObj.get("otp");
             String city = (String) jsObj.get("city");
@@ -51,10 +53,9 @@ public final class ProcessESignRequest {
                 esigninputsList.add(esInputs);
                 fileObject.put("document_hash", toBesignedData);
                 mergedDocumentsMap.put(i++, fileObject);
-
             }
-
-            serviceReturn = esign.BulkeSign(aadhaar, otp, eSignImpl.eSign_Auth.OTP, "UNIQUE_DEVICE_CODE_FOR_BIO", esigninputsList, "/home/ubuntu/emudhra_new");
+	   System.out.println("length is " + esigninputsList.size());
+            serviceReturn = esign.BulkeSign(aadhaar, otp, eSignImpl.eSign_Auth.OTP, "UNIQUE_DEVICE_CODE_FOR_BIO", esigninputsList, "src/main/resources/uploads");
             System.out.println(serviceReturn.getStatus());
             System.out.println(serviceReturn.getResponseXML());
 
@@ -77,20 +78,23 @@ public final class ProcessESignRequest {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("id", (String)mergedDocumentsMap.get(i).get("id"));
                 jsonObject.put("esigned_url", httpUrl);
-                jsonObject.put("document_hash", (String)mergedDocumentsMap.get(i).get("document_hash"));
+                jsonObject.put("document_hash", new String((byte[])mergedDocumentsMap.get(i).get("document_hash")));
                 esignedDocuments.add(jsonObject);
                 i++;
             }
-            JSONObject response = new JSONObject();
-            response.put("pid", pid);
+            response.put("esign_id", pid);
             response.put("response", serviceReturn.getResponseXML());
             response.put("merged_documents", esignedDocuments);
-
+	    response.put("transaction_id",serviceReturn.getTxnNo());
+	    response.put("status","success");
             return response;
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.out.println("exception " + ex.getMessage());
+            response.put("esign_id", pid);
+            response.put("status","failure");
+	   ex.printStackTrace();
         }
 
-    return null;
+    return response;
     }
 }

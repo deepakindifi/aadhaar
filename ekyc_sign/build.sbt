@@ -2,7 +2,7 @@ name := "EKYC"
 
 version := "1.0"
 
-scalaVersion := "2.11.8"
+scalaVersion := "2.9.1"
 
 libraryDependencies ++= Seq(
   "com.itextpdf" % "itextpdf" % "5.5.4",
