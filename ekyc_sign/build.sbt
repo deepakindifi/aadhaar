@@ -17,6 +17,7 @@ libraryDependencies ++= Seq(
   "javax.persistence" % "persistence-api" % "1.0",
   "log4j" % "log4j" % "1.2.17",
   "commons-logging" % "commons-logging" % "1.1.1",
-  "org.apache.santuario" % "xmlsec" % "1.4.3"
+  "org.apache.santuario" % "xmlsec" % "1.4.3",
+  "com.amazonaws" % "aws-java-sdk" % "1.11.36"
 )
 
