@@ -23,6 +23,7 @@ public final class ProcessESignRequest {
         try {
             JSONObject jsObj = EsignUtil.decodeJson(payload);
             final String pid = (String) jsObj.get("esign_id");
+
             String auth = (String) jsObj.get("auth");
             String otp = (String) jsObj.get("otp");
             String city = (String) jsObj.get("city");

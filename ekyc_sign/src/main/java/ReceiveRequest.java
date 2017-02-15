@@ -52,6 +52,7 @@
     Properties p = new Properties();
       p.load(s);
       System.out.println(p.getProperty("demo"));*/
+
     ProcessEKycRequest req = new ProcessEKycRequest();
     ConnectionFactory factory = new ConnectionFactory();
     System.out.println("trying to connec");
