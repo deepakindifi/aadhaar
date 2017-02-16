@@ -2,6 +2,7 @@ import org.json.simple.*;
 import java.awt.Color;
 import org.json.simple.parser.*;
 import java.io.*;
+import java.util.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
@@ -93,19 +94,19 @@ public class PdfGenerator {
 		} catch(Exception ex) {return null;}
 	}
 
-	public static generatePdf(String payload) throws Exception {
+	public static JSONObject generatePdf(String payload) {
 		System.out.println(payload);
 		JSONObject jsObj = PdfGenerator.decodeJson(payload);
 		String[] imageFormats = {"jpg","jpeg","png","tif","bmp","gif","svg","tiff"};
 		String borrower_name = ((String)jsObj.get("business_name"));
-		JSONObject document = (JSONObject)jsObj.get("document"));
-		String filename = (String)document.get("filename");
-		String url = (String)document.get("pdf_url");
-		String documentId = (String)document.get("id");
-        String format = filename.substring(filename.lastIndexOf(".")+1);
-        String newFileName = new StringBuilder(filename).replace(format, "pdf").insert(filename.lastIndexOf("."), "-attested").toString(); 
-		
-		if(Arrays.asList(imageFormats).contains(format) {
+		JSONObject doc = (JSONObject)jsObj.get("document");
+		String filename = (String)doc.get("filename");
+		String url = (String)doc.get("pdf_url");
+		String documentId = (String)doc.get("id");
+        	String format = filename.substring(filename.lastIndexOf(".")+1);
+        	String newFileName = new StringBuilder(filename.replace(format, "pdf")).insert(filename.lastIndexOf("."), "-attested").toString(); 
+		try {
+		if(Arrays.asList(imageFormats).contains(format)) {
 			Document document = new Document();
 			AmazonS3Util.downloadFile(filename, url);
 			PdfWriter.getInstance(document, new FileOutputStream("src/main/resources/downloads/" + filename.replace(format,"pdf")));
@@ -119,7 +120,6 @@ public class PdfGenerator {
 
 		Image sign = Image.getInstance("src/main/resources/signature.png");
 		sign.scalePercent(70);
-		try {
 			for(int k = 0; k <= 1; k++) {
 				PdfReader reader;
 				PdfStamper stamper;
@@ -138,7 +138,6 @@ public class PdfGenerator {
 				PdfDictionary page;
 				PdfArray crop;
 				PdfArray media;
-				int fromPage = pageCount;
 				String actualAnnotation = "";
 				for (int j = 1; j < total; j++) {
 					stamper.setRotateContents(false);
@@ -152,7 +151,6 @@ public class PdfGenerator {
 						over.setTextMatrix(210, 30);
 						over.showText("Authorized Signatory for " + borrower_name);
 						over.endText();
-						pageCount++;
 					} else {
 						float percentage = 0.75f;
 						page = reader.getPageN(j);
@@ -174,8 +172,8 @@ public class PdfGenerator {
 		String httpUrl = AmazonS3Util.uploadFile(newFileName, url);
 		JSONObject jsonObject = new JSONObject();
         jsonObject.put("id", documentId);
-        document.put("attested_url", httpUrl);
-        jsonObject.put("document", document);
+        doc.put("attested_url", httpUrl);
+        jsonObject.put("document", doc);
         return jsonObject;
 	}
 }

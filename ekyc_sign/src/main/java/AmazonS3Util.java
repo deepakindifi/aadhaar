@@ -36,8 +36,8 @@ public class AmazonS3Util {
 
     }
 
-    public static String uploadFile(String fileName, String httpUrl, String s3BucketName) {
-        AmazonS3Util.uploadFile(fileName, httpUrl, defaultS3BucketName);
+    public static String uploadFile(String fileName, String httpUrl) {
+        return AmazonS3Util.uploadFile(fileName, httpUrl, defaultS3BucketName);
     }
 
     public static String uploadFile(String fileName, String httpUrl, String s3BucketName) {
