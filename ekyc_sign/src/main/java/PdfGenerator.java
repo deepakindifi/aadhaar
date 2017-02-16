@@ -97,10 +97,10 @@ public class PdfGenerator {
 		System.out.println(payload);
 		JSONObject jsObj = PdfGenerator.decodeJson(payload);
 		String[] imageFormats = {"jpg","jpeg","png","tif","bmp","gif","svg","tiff"};
-		String borrower_name = ((String)jsObj.get("borrower_name"));
+		String borrower_name = ((String)jsObj.get("business_name"));
 		JSONObject document = (JSONObject)jsObj.get("document"));
 		String filename = (String)document.get("filename");
-		String url = (String)document.get("url");
+		String url = (String)document.get("pdf_url");
 		String documentId = (String)document.get("id");
         String format = filename.substring(filename.lastIndexOf(".")+1);
         String newFileName = new StringBuilder(filename).replace(format, "pdf").insert(filename.lastIndexOf("."), "-attested").toString(); 
