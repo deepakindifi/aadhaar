@@ -18,7 +18,7 @@ public class AmazonS3Util {
     private static final AmazonS3Client s3Client = new AmazonS3Client(s3Credentials);
     private static final String downloadFolder = "src/main/resources/downloads";
     private static final String uploadFolder = "src/main/resources/uploads";
-    private static final String defaultS3BucketName = "docs-indifi";
+    private static final String defaultS3BucketName = "docs-indifi-staging";
 
     public static void downloadFile(String fileName, String httpUrl) {
         AmazonS3Util.downloadFile(fileName, httpUrl, defaultS3BucketName);
@@ -31,7 +31,7 @@ public class AmazonS3Util {
             GetObjectRequest getObjectRequest = new GetObjectRequest(s3BucketName, url.getPath().substring(1));
             s3Client.getObject(getObjectRequest, destinationFile);
         } catch (Exception e) {
-
+		System.out.println("exception is " + e.getMessage());
         }
 
     }
@@ -51,6 +51,7 @@ public class AmazonS3Util {
             s3Client.putObject(putObjectRequest);
             return newHttpUrl;
         } catch (Exception e) {
+		System.out.println("exception is " + e.getMessage());
 
         }
         return null;

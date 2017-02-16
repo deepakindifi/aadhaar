@@ -106,9 +106,10 @@ public class PdfGenerator {
         	String format = filename.substring(filename.lastIndexOf(".")+1);
         	String newFileName = new StringBuilder(filename.replace(format, "pdf")).insert(filename.lastIndexOf("."), "-attested").toString(); 
 		try {
+		AmazonS3Util.downloadFile(filename, url);
+		System.out.println(filename);
 		if(Arrays.asList(imageFormats).contains(format)) {
 			Document document = new Document();
-			AmazonS3Util.downloadFile(filename, url);
 			PdfWriter.getInstance(document, new FileOutputStream("src/main/resources/downloads/" + filename.replace(format,"pdf")));
 			document.open();
 			Image img = Image.getInstance("src/main/resources/downloads/" + filename);
@@ -117,13 +118,14 @@ public class PdfGenerator {
 			document.add(img);
 			document.close();
 		}
-
+		System.out.println("downloaded");
 		Image sign = Image.getInstance("src/main/resources/signature.png");
 		sign.scalePercent(70);
 			for(int k = 0; k <= 1; k++) {
 				PdfReader reader;
 				PdfStamper stamper;
 				if(k == 0) {
+					System.out.println("downloaded here");
 					reader  = new PdfReader("src/main/resources/downloads/" + filename);
 					reader.unethicalreading = true;
 					stamper = new PdfStamper(reader, new FileOutputStream("src/main/resources/temp/" + filename));
