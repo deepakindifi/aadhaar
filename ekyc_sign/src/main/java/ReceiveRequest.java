@@ -61,6 +61,7 @@
     channel.queueBind(queueName, EXCHANGE_NAME, "ekyc_call");
     channel.queueBind(queueName, EXCHANGE_NAME, "esign_call");
     channel.queueBind(queueName, EXCHANGE_NAME, "annotate_pdf");
+    channel.queueBind(queueName, EXCHANGE_NAME, "generate_pdf");
     channel.queueBind(queueName, EXCHANGE_NAME, "loan_agreement");
 
     System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
@@ -93,8 +94,14 @@
          ProcessESignRequest req = new ProcessESignRequest();
          System.out.println("called"+ message);
          JSONObject response = req.esign(message);
-	System.out.println(response.toString());
+	       System.out.println(response.toString());
          ReceiveRequest.sendResponse(response.toString(),"process_esign_response");
+      } 
+      else if(envelope.getRoutingKey().equals("generate_pdf")) {
+         PdfGenerator req = new PdfGenerator();
+         JSONObject response = req.generatePdf(message);
+         System.out.println(response.toString());
+         ReceiveRequest.sendResponse(response.toString(),"process_generated_pdf");
       } 
       else {
        Annotator annotator = new Annotator();

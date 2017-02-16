@@ -18,12 +18,13 @@ public class AmazonS3Util {
     private static final AmazonS3Client s3Client = new AmazonS3Client(s3Credentials);
     private static final String downloadFolder = "src/main/resources/downloads";
     private static final String uploadFolder = "src/main/resources/uploads";
-    private static final String s3BucketName = "docs-indifi";
-    private static final String esignDocumentSuffix = "_esign";
-
+    private static final String defaultS3BucketName = "docs-indifi";
 
     public static void downloadFile(String fileName, String httpUrl) {
+        AmazonS3Util.downloadFile(fileName, httpUrl, defaultS3BucketName);
+    }
 
+    public static void downloadFile(String fileName, String httpUrl, String s3BucketName) {
         try {
             File destinationFile = new File(downloadFolder + "/" + fileName);
             URL url = new URL(httpUrl);
@@ -35,14 +36,17 @@ public class AmazonS3Util {
 
     }
 
-    public static String uploadFile(String fileName, String httpUrl) {
+    public static String uploadFile(String fileName, String httpUrl, String s3BucketName) {
+        AmazonS3Util.uploadFile(fileName, httpUrl, defaultS3BucketName);
+    }
+
+    public static String uploadFile(String fileName, String httpUrl, String s3BucketName) {
 
         try {
             File sourceFile = new File(uploadFolder + "/" + fileName);
             URL url = new URL(httpUrl);
-            String newFileName = new StringBuilder(fileName).insert(fileName.lastIndexOf("."), esignDocumentSuffix).toString();
-            String s3BucketKey = url.getPath().substring(1, url.getPath().lastIndexOf("/")) + "/" + newFileName;
-            String newHttpUrl = httpUrl.substring(0, httpUrl.lastIndexOf("/")) + "/" + newFileName;
+            String s3BucketKey = url.getPath().substring(1, url.getPath().lastIndexOf("/")) + "/" + fileName;
+            String newHttpUrl = httpUrl.substring(0, httpUrl.lastIndexOf("/")) + "/" + fileName;
             PutObjectRequest putObjectRequest = new PutObjectRequest(s3BucketName, s3BucketKey, sourceFile);
             s3Client.putObject(putObjectRequest);
             return newHttpUrl;

@@ -54,7 +54,7 @@ public final class ProcessESignRequest {
                 fileObject.put("document_hash", toBesignedData);
                 mergedDocumentsMap.put(i++, fileObject);
             }
-	   System.out.println("length is " + esigninputsList.size());
+	       System.out.println("length is " + esigninputsList.size());
             serviceReturn = esign.BulkeSign(aadhaar, otp, eSignImpl.eSign_Auth.OTP, "UNIQUE_DEVICE_CODE_FOR_BIO", esigninputsList, "src/main/resources/uploads");
             System.out.println(serviceReturn.getStatus());
             System.out.println(serviceReturn.getResponseXML());
@@ -69,12 +69,14 @@ public final class ProcessESignRequest {
             JSONArray esignedDocuments = new JSONArray();
             while (itr.hasNext()) {
                 data[i] = itr.next();
-                File file = new File("src/main/resources/uploads/" + (String)mergedDocumentsMap.get(i).get("name"));
+                String fileName = (String)mergedDocumentsMap.get(i).get("name");
+                String newFileName = new StringBuilder(fileName).insert(fileName.lastIndexOf("."), "-sign").toString();
+                File file = new File("src/main/resources/uploads/" + newFileName);
                 FileOutputStream fileOutputStream = new FileOutputStream(file);
                 fileOutputStream.write(Base64.getDecoder().decode(data[i]));
                 fileOutputStream.flush();
                 fileOutputStream.close();
-                String httpUrl = AmazonS3Util.uploadFile((String)mergedDocumentsMap.get(i).get("name"), (String)mergedDocumentsMap.get(i).get("url"));
+                String httpUrl = AmazonS3Util.uploadFile(newFileName, (String)mergedDocumentsMap.get(i).get("url"));
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("id", (String)mergedDocumentsMap.get(i).get("id"));
                 jsonObject.put("esigned_url", httpUrl);
@@ -85,8 +87,8 @@ public final class ProcessESignRequest {
             response.put("esign_id", pid);
             response.put("response", serviceReturn.getResponseXML());
             response.put("merged_documents", esignedDocuments);
-	    response.put("transaction_id",serviceReturn.getTxnNo());
-	    response.put("status","success");
+	        response.put("transaction_id",serviceReturn.getTxnNo());
+	        response.put("status","success");
             return response;
         } catch (Exception ex) {
             System.out.println("exception " + ex.getMessage());
