@@ -4,6 +4,8 @@ version := "1.0"
 
 scalaVersion := "2.9.1"
 
+mainClass in (Compile, run) := Some("ReceiveRequest")
+
 libraryDependencies ++= Seq(
   "com.itextpdf" % "itextpdf" % "5.5.4",
   "org.apache.santuario" % "xmlsec" % "1.4.3",

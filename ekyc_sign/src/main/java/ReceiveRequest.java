@@ -4,6 +4,8 @@
   import org.json.simple.parser.*;
   import java.io.*;
   import java.io.IOException;
+  import java.util.Properties;
+
   import org.json.simple.*;
   import org.json.simple.parser.*;
 
@@ -44,7 +46,13 @@
 
 
   public static void main(String[] argv) throws Exception {
-    ProcessEKycRequest req = new ProcessEKycRequest(); 
+
+   /* String propertyFile = "app-" + System.getProperty("env") + ".properties";
+    InputStream s = ReceiveRequest.class.getClassLoader().getResourceAsStream(propertyFile);
+    Properties p = new Properties();
+      p.load(s);
+      System.out.println(p.getProperty("demo"));*/
+    ProcessEKycRequest req = new ProcessEKycRequest();
     ConnectionFactory factory = new ConnectionFactory();
     System.out.println("trying to connec");
     factory.setHost("localhost");
@@ -95,7 +103,7 @@
          System.out.println("called"+ message);
          JSONObject response = req.esign(message);
 	       System.out.println(response.toString());
-         ReceiveRequest.sendResponse(response.toString(),"process_esign_response");
+         ReceiveRequest.sendResponse(response.toString(),(String)response.get("topic"));
       } 
       else if(envelope.getRoutingKey().equals("generate_pdf")) {
          PdfGenerator req = new PdfGenerator();
