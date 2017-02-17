@@ -92,8 +92,9 @@ public final class ProcessESignRequest {
             if(serviceReturn.getStatus().equalsIgnoreCase("success")) {
 
                 //upload document hash files to S3
+                List<Future> documentHashFutureList = new ArrayList<>();
                 for(final JSONObject document : documentsList) {
-                   threadpool.submit(new Runnable() {
+                   Future<?> documentHashFuture = threadpool.submit(new Runnable() {
                        @Override
                        public void run() {
 
@@ -112,6 +113,8 @@ public final class ProcessESignRequest {
 
                        }
                    });
+
+                    documentHashFutureList.add(documentHashFuture);
                 }
 
                 final String responseXML = serviceReturn.getResponseXML();
@@ -144,6 +147,7 @@ public final class ProcessESignRequest {
                     final String url = (String)documentsList.get(i).get("generated_url");
                     final String filename = EsignUtil.getFileNameFromUrl(url);
                     final String documentId = (String)documentsList.get(i).get("id");
+                    documentHashFutureList.get(i).get();
                     final String documentHashUrl = (String)documentsList.get(i).get("document_hash_url");
                     File file = new File("src/main/resources/uploads/" + filename);
                     final JSONObject jsonObject = new JSONObject();
@@ -184,13 +188,20 @@ public final class ProcessESignRequest {
                 response.put("topic", (String) jsObj.get("topic"));
             } else {
                 response.put("status","failure");
-                response.put("error_code", "");
+                JSONObject errorObject = new JSONObject();
+                errorObject.put("code", EsignErrorCodes.getErrorCode(serviceReturn.getErrorCode()));
+                errorObject.put("message", serviceReturn.getErrorMessage());
+                response.put("error", errorObject);
             }
 
         } catch (Exception ex) {
             System.out.println("exception " + ex.getMessage());
             response.put("esign_id", "");
             response.put("status","failure");
+            JSONObject errorObject = new JSONObject();
+            errorObject.put("code", EsignErrorCodes.getErrorCode("0"));
+            errorObject.put("message", "Esign Failed");
+            response.put("error", errorObject);
 	        ex.printStackTrace();
         }
 
