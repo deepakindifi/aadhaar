@@ -192,6 +192,7 @@ public final class ProcessESignRequest {
                 errorObject.put("code", EsignErrorCodes.getErrorCode(serviceReturn.getErrorCode()));
                 errorObject.put("message", serviceReturn.getErrorMessage());
                 response.put("error", errorObject);
+                response.put("topic", (String) jsObj.get("topic"));
             }
 
         } catch (Exception ex) {
