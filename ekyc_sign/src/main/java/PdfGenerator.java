@@ -3,7 +3,7 @@ import java.awt.Color;
 import org.json.simple.parser.*;
 import java.io.*;
 import java.util.*;
-import java.net.Socket;
+import java.net.*;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
@@ -77,6 +77,7 @@ import com.itextpdf.text.Document.*;
 import com.itextpdf.text.pdf.*;
 import com.itextpdf.text.pdf.security.*;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.codec.net.*;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.pdf.*;
 import com.itextpdf.text.*;
@@ -104,7 +105,7 @@ public class PdfGenerator {
 		String url = (String)doc.get("pdf_url");
 		String documentId = (String)doc.get("id");
         	String format = filename.substring(filename.lastIndexOf(".")+1);
-        	String newFileName = new StringBuilder(filename.replace(format, "pdf")).insert(filename.lastIndexOf("."), "-attested").toString(); 
+        	String newFileName = new StringBuilder(filename.replace(format, "pdf")).insert(filename.lastIndexOf("."), "-generated").toString(); 
 		try {
 		AmazonS3Util.downloadFile(filename, url);
 		System.out.println(filename);

@@ -5,7 +5,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 
 import java.io.File;
 import java.net.URI;
-import java.net.URL;
+import java.net.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -111,11 +111,12 @@ public class AmazonS3Util {
     }
 
     public static String uploadFile(String fileName, String httpUrl, String s3BucketName) {
+	System.out.println("final file is " + fileName);
         try {
             File sourceFile = new File(uploadFolder + "/" + fileName);
             URL url = new URL(httpUrl);
             String s3BucketKey = url.getPath().substring(1, url.getPath().lastIndexOf("/")) + "/" + fileName;
-            String newHttpUrl = httpUrl.substring(0, httpUrl.lastIndexOf("/")) + "/" + fileName;
+            String newHttpUrl = httpUrl.substring(0, httpUrl.lastIndexOf("/")) + "/" + URLEncoder.encode(fileName);
             PutObjectRequest putObjectRequest = new PutObjectRequest(s3BucketName, s3BucketKey, sourceFile);
             s3Client.putObject(putObjectRequest);
             return newHttpUrl;
