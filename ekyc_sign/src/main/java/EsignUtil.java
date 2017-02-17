@@ -1,6 +1,8 @@
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import java.net.URL;
+
 /**
  * Created by Sahil on 16/02/17.
  */
@@ -21,5 +23,17 @@ public class EsignUtil {
         } catch (Exception ex) {
             return null;
         }
+    }
+
+    public static String getFileNameFromUrl(String httpUrl) {
+
+        String fileName = "";
+        try {
+            URL url = new URL(httpUrl);
+            fileName = url.getPath().substring(url.getPath().lastIndexOf("/") + 1);
+        } catch (Exception e) {
+
+        }
+        return fileName;
     }
 }

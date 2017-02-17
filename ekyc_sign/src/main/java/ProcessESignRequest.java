@@ -44,7 +44,7 @@ public final class ProcessESignRequest {
                 final JSONObject fileObject = iterator.next();
                 String url = (String) fileObject.get("generated_url");
                 String reason = (String) fileObject.get("reason");
-                String filename = (String) fileObject.get("name");
+                String filename = EsignUtil.getFileNameFromUrl(url);
                 Future eSignInputsFuture = threadpool.submit(new Callable<eSignInputs>() {
 
                     @Override
@@ -99,8 +99,8 @@ public final class ProcessESignRequest {
                        public void run() {
 
                            try {
-                               String filename = (String)document.get("name");
                                String documentUrl = (String)document.get("generated_url");
+                               String filename = EsignUtil.getFileNameFromUrl(documentUrl);
                                String hashFilename = filename.substring(0, filename.lastIndexOf(".")) + documentHashFileSuffix + ".txt";
                                File hashFile = new File("src/main/resources/hash-files/" + hashFilename);
                                PrintWriter out = new PrintWriter(hashFile);
@@ -142,8 +142,8 @@ public final class ProcessESignRequest {
                 i = 0;
                 while (itr.hasNext()) {
                     final String data = itr.next();
-                    final String filename = (String)documentsList.get(i).get("name");
-                    final String url = (String)documentsList.get(i).get("url");
+                    final String url = (String)documentsList.get(i).get("generated_url");
+                    final String filename = EsignUtil.getFileNameFromUrl(url);
                     final String documentId = (String)documentsList.get(i).get("id");
                     final String documentHashUrl = (String)documentsList.get(i).get("document_hash_url");
                     File file = new File("src/main/resources/uploads/" + filename);
