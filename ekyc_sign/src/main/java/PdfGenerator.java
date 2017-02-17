@@ -118,6 +118,7 @@ public class PdfGenerator {
 			document.add(img);
 			document.close();
 		}
+		filename = filename.replace(format,"pdf");
 		System.out.println("downloaded");
 		Image sign = Image.getInstance("src/main/resources/signature.png");
 		sign.scalePercent(70);
