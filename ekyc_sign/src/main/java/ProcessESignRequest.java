@@ -105,6 +105,7 @@ public final class ProcessESignRequest {
                                File hashFile = new File("src/main/resources/hash-files/" + hashFilename);
                                PrintWriter out = new PrintWriter(hashFile);
                                out.println((String)document.get("document_hash"));
+                               out.close();
                                String httpUrl = AmazonS3Util.uploadDocumentHashFile(hashFilename, documentUrl);
                                document.put("document_hash_url", httpUrl);
                            } catch (Exception e) {
@@ -128,6 +129,7 @@ public final class ProcessESignRequest {
                             File responseFile = new File("src/main/resources/response-files/" + filename);
                             PrintWriter out = new PrintWriter(responseFile);
                             out.println(responseXML);
+                            out.close();
                             String httpUrl = AmazonS3Util.uploadESignResponse(filename, s3Url);
                             return httpUrl;
                         } catch (Exception e) {
