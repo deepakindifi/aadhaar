@@ -22,7 +22,7 @@ public class AmazonS3Util {
     private static final String documentHashFolder = "src/main/resources/hash-files";
     private static final String esignResponseFolder = "src/main/resources/response-files";
     private static final String responseS3BucketKey = "esign-response";
-    private static final String s3BucketName = "docs-indifi";
+    private static final String s3BucketName = "docs-indifi-staging";
     private static final String esignDocumentSuffix = "-esign";
 
     public static void downloadESignFile(String fileName, String httpUrl) {
