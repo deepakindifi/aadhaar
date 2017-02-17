@@ -174,7 +174,7 @@ public class PdfGenerator {
 		String httpUrl = AmazonS3Util.uploadFile(newFileName, url);
 		JSONObject jsonObject = new JSONObject();
         jsonObject.put("id", documentId);
-        doc.put("attested_url", httpUrl);
+        doc.put("generated_url", httpUrl);
         jsonObject.put("document", doc);
         return jsonObject;
 	}
