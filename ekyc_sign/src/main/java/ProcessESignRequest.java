@@ -84,7 +84,6 @@ public final class ProcessESignRequest {
             System.out.println(serviceReturn.getResponseXML());
 
             response.put("esign_id", pid);
-            response.put("response", serviceReturn.getResponseXML());
 
             //Option 2
             //For Pre eKYC based pdf signing
@@ -196,6 +195,7 @@ public final class ProcessESignRequest {
         }
 
 
+        System.out.println(">>>>> sending response = " + response.toJSONString());
         return response;
     }
 }
