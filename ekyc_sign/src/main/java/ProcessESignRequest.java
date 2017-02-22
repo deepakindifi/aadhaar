@@ -29,7 +29,7 @@ public final class ProcessESignRequest {
             String city = (String) jsObj.get("city");
             String aadhaar = (String) jsObj.get("aadhaar");
             JSONArray documents = (JSONArray) jsObj.get("documents");
-            final String s3Url = (String) ((JSONObject)documents.iterator().next()).get("generated_url");
+            final String s3Url = (String) ((JSONObject)documents.iterator().next()).get("attestable_url");
             List<JSONObject> documentsList = new ArrayList<JSONObject>();
 
             eSign esign = new eSign("src/main/resources/indifi.lic", "src/main/resources/indifi.pfx", "emudhra", false, "", 0, 0);
