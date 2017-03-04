@@ -1,21 +1,27 @@
 import com.rabbitmq.client.*;
 import org.json.simple.*;
+import java.awt.Color;
 import org.json.simple.parser.*;
-
+import java.io.*;
 import java.io.IOException;
+import java.util.Properties;
+
+import org.json.simple.*;
+import org.json.simple.parser.*;
 
 
 public class ReceiveRequest {
 
-    private static final String EXCHANGE_NAME = "indifi_durable";
-    private static final String EKYC_TOPIC = "ekyc_call";
-    private static final String ESIGN_TOPIC = "esign_call";
-    private static final String GENERATE_DOCUMENTS_TOPIC = "generate_pdf";
+    public static final String EXCHANGE_NAME = "indifi_durable";
+    public static final String EKYC_TOPIC = "ekyc_call";
+    public static final String ESIGN_TOPIC = "esign_call";
+    public static final String GENERATE_DOCUMENTS_TOPIC = "generate_pdf";
 
     public static String NODE_MACHINE_ADDRESS;
     public static String RABBITMQ_HOST;
     public static String RABBITMQ_USERNAME;
     public static String RABBITMQ_PASSWORD;
+    public static String RABBITMQ_ADDRESS;
 
     public static void sendResponse(String message, String key) {
         Connection connection = null;
@@ -83,7 +89,7 @@ public class ReceiveRequest {
                 String message = new String(body, "UTF-8");
 
                 RequestProcessorFactory requestProcessorFactory = new RequestProcessorFactory();
-                requestProcessor = requestProcessorFactory.getRequestProcessor(envelope.getRoutingKey());
+                RequestProcessor requestProcessor = requestProcessorFactory.getRequestProcessor(envelope.getRoutingKey());
                 if(requestProcessor != null) {
                     JSONObject response = requestProcessor.processRequest(message);
                     ReceiveRequest.sendResponse((String)response.get("message"), (String)response.get("topic"));

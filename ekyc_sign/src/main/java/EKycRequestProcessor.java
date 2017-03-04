@@ -1,25 +1,45 @@
-import com.amazonaws.services.cloudtrail.model.PublicKey;
+import org.json.simple.*;
+import org.json.simple.parser.*;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.security.cert.*;
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import java.net.HttpURLConnection;
+import javax.net.ssl.*;
+
+import java.security.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 import org.apache.commons.codec.binary.Base64;
+import javax.xml.crypto.dsig.*;
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.crypto.paddings.PKCS7Padding;
 import org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.json.simple.*;
-import org.json.simple.parser.*;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.crypto.dsig.spec.*;
+import javax.xml.crypto.dsig.keyinfo.*;
+import javax.xml.crypto.dsig.dom.*;
+import javax.xml.crypto.dsig.*;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.security.Security;
-import java.util.Date;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+
 
 
 
@@ -139,7 +159,7 @@ public final class EKycRequestProcessor implements RequestProcessor {
 		JSONObject response = new JSONObject();
 		try {
 			Security.addProvider(new BouncyCastleProvider());
-			JSONObject jsObj = ProcessEKycRequest.decodeJson(pl);
+			JSONObject jsObj = EKycRequestProcessor.decodeJson(pl);
 			String data = (String)jsObj.get("pid");
 			String payload = (String)jsObj.get("xml");
 		//String payload = "%skey%\n%hmac%\n%pid%";
@@ -155,9 +175,9 @@ public final class EKycRequestProcessor implements RequestProcessor {
 			Cipher pkCipher = Cipher.getInstance(ASYMMETRIC_ALGO, JCE_PROVIDER);
 			pkCipher.init(Cipher.ENCRYPT_MODE, publicKey);
 			byte[] encSessionKey = pkCipher.doFinal(symmKey);
-			byte[] finalDataBlock = ProcessEKycRequest.encryptWithSessionKey(symmKey, data.getBytes());
-			byte[] hashedData = ProcessEKycRequest.hashPayload(data.getBytes());
-			byte[] hmac = ProcessEKycRequest.encryptWithSessionKey(symmKey, hashedData);   
+			byte[] finalDataBlock = EKycRequestProcessor.encryptWithSessionKey(symmKey, data.getBytes());
+			byte[] hashedData = EKycRequestProcessor.hashPayload(data.getBytes());
+			byte[] hmac = EKycRequestProcessor.encryptWithSessionKey(symmKey, hashedData);   
 			payload = payload.replace("%pid%",new String(Base64.encodeBase64(finalDataBlock)));
 			payload = payload.replace("%hmac%",new String(Base64.encodeBase64(hmac)));
 			payload = payload.replace("%skey%",new String(Base64.encodeBase64(encSessionKey)));
