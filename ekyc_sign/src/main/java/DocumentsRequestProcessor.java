@@ -1,90 +1,17 @@
-import org.json.simple.*;
-import java.awt.Color;
-import org.json.simple.parser.*;
-import java.io.*;
-import java.util.*;
-import java.net.*;
-import java.net.UnknownHostException;
-import java.security.KeyManagementException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.Provider;
-import java.security.PublicKey;
-import java.security.Security;
-import java.security.UnrecoverableEntryException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
-import java.io.*;
-import java.net.*;
-import java.net.HttpURLConnection;
-import javax.net.ssl.*;
-import javax.xml.crypto.*;
-import javax.xml.crypto.dsig.dom.DOMSignContext;
-import javax.xml.crypto.dsig.dom.DOMValidateContext;
-import javax.xml.crypto.dsig.keyinfo.KeyInfo;
-import javax.xml.crypto.dsig.keyinfo.KeyInfoFactory;
-import javax.xml.crypto.dsig.keyinfo.X509Data;
-import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
-import javax.xml.crypto.dsig.spec.TransformParameterSpec;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-//import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-
-import java.io.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
-
-
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.GeneralSecurityException;
-import java.security.KeyStore;
-import java.security.PrivateKey;
-import java.security.Security;
-import java.security.cert.Certificate;
-import java.util.Calendar;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import com.itextpdf.text.*;
+import com.itextpdf.text.Document;
 import com.itextpdf.text.Document.*;
 import com.itextpdf.text.pdf.*;
 import com.itextpdf.text.pdf.security.*;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.codec.net.*;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.pdf.*;
-import com.itextpdf.text.*;
 import org.json.simple.*;
 import org.json.simple.parser.*;
 
-public class PdfGenerator {
+import java.io.FileOutputStream;
+
+//import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
+public class DocumentsRequestProcessor implements RequestProcessor {
 
 	public static JSONObject decodeJson(String data) {
 		try {
@@ -95,7 +22,7 @@ public class PdfGenerator {
 		} catch(Exception ex) {return null;}
 	}
 
-	public static JSONObject generatePdf(String payload) {
+	public JSONObject processRequest(String payload) {
 		System.out.println(payload);
 		JSONObject jsObj = PdfGenerator.decodeJson(payload);
 		String[] imageFormats = {"jpg","jpeg","png","tif","bmp","gif","svg","tiff"};
@@ -178,6 +105,9 @@ public class PdfGenerator {
         jsonObject.put("id", documentId);
         doc.put("generated_url", httpUrl);
         jsonObject.put("document", doc);
-        return jsonObject;
+        JSONObject response = new JSONObject();
+        response.put("message", jsonObject.toString());
+        response.put("topic", "process_generated_pdf");
+        return response;
 	}
 }
