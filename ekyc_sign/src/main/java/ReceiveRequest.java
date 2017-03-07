@@ -15,13 +15,16 @@ public class ReceiveRequest {
     public static final String EXCHANGE_NAME = "indifi_durable";
     public static final String EKYC_TOPIC = "ekyc_call";
     public static final String ESIGN_TOPIC = "esign_call";
-    public static final String GENERATE_DOCUMENTS_TOPIC = "generate_pdf";
+    public static final String GENERATE_DOCUMENTS_TOPIC = "annotate_documents_pdf";
+    public static final String LOAN_AGREEMENT_TOPIC = "loan_agreement";
 
     public static String NODE_MACHINE_ADDRESS;
     public static String RABBITMQ_HOST;
     public static String RABBITMQ_USERNAME;
     public static String RABBITMQ_PASSWORD;
     public static String RABBITMQ_ADDRESS;
+    public static String S3_BUCKET;
+
 
     public static void sendResponse(String message, String key) {
         Connection connection = null;
@@ -73,6 +76,7 @@ public class ReceiveRequest {
             channel.queueBind(queueName, EXCHANGE_NAME, GENERATE_DOCUMENTS_TOPIC);
             Consumer consumer = initializeConsumer(channel);
             channel.basicConsume(queueName, true, consumer);
+            System.out.println("---- LISTENING ------");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -105,13 +109,16 @@ public class ReceiveRequest {
     public static void main(String[] argv) throws Exception {
 
         String propertyFile = "app-" + System.getProperty("env") + ".properties";
+        System.out.println(propertyFile);
         InputStream s = ReceiveRequest.class.getClassLoader().getResourceAsStream(propertyFile);
         Properties p = new Properties();
         p.load(s);
+        System.out.println("HERE");
         NODE_MACHINE_ADDRESS = p.getProperty("node_machine_address");
         RABBITMQ_HOST = p.getProperty("rabbitmq_host");
         RABBITMQ_USERNAME = p.getProperty("rabbitmq_username");
         RABBITMQ_PASSWORD = p.getProperty("rabbitmq_password");
+        S3_BUCKET = p.getProperty("s3_bucket");
 
         initializeChannel();
         

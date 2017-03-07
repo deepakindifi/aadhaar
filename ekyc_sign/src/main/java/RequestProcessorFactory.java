@@ -9,7 +9,10 @@ public class RequestProcessorFactory {
             	requestProcessor = new ESignRequestProcessor();
             	break;
             case ReceiveRequest.GENERATE_DOCUMENTS_TOPIC:
-            	requestProcessor = new DocumentsRequestProcessor();
+            	requestProcessor = new AnnotateDocumentsProcessor();
+            	break;
+            case ReceiveRequest.LOAN_AGREEMENT_TOPIC:
+            	requestProcessor = new AnnotateDocumentsProcessor();
             	break;
         }
         return requestProcessor;
