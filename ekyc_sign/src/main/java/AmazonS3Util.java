@@ -18,8 +18,8 @@ import com.amazonaws.ClientConfiguration;
  */
 public class AmazonS3Util {
 
-    private static final BasicAWSCredentials s3Credentials = new BasicAWSCredentials("AKIAJ2MT2AJIBGP7Z7OA", "Ll0YxMwLfGM6e1VAXH1zjl86xkqPsgpDYFk/uKUO");
-    private static final AmazonS3Client s3Client = (AmazonS3Client) AmazonS3ClientBuilder.defaultClient();
+    private static final BasicAWSCredentials s3Credentials = new BasicAWSCredentials(ReceiveRequest.AWS_ACCESS_KEY, ReceiveRequest.AWS_SECRET_KEY);
+    private static final AmazonS3Client s3Client = new AmazonS3Client(s3Credentials);
     private static final String downloadFolder = "src/main/resources/downloads";
     private static final String uploadFolder = "src/main/resources/uploads";
     private static final String defaultS3BucketName = ReceiveRequest.S3_BUCKET;

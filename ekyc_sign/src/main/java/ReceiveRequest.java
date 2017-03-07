@@ -24,6 +24,8 @@ public class ReceiveRequest {
     public static String RABBITMQ_PASSWORD;
     public static String RABBITMQ_ADDRESS;
     public static String S3_BUCKET;
+    public static String AWS_ACCESS_KEY;
+    public static String AWS_SECRET_KEY;
 
 
     public static void sendResponse(String message, String key) {
@@ -119,6 +121,8 @@ public class ReceiveRequest {
         RABBITMQ_USERNAME = p.getProperty("rabbitmq_username");
         RABBITMQ_PASSWORD = p.getProperty("rabbitmq_password");
         S3_BUCKET = p.getProperty("s3_bucket");
+        AWS_ACCESS_KEY = p.getProperty("aws_access_key");
+        AWS_SECRET_KEY = p.getProperty("aws_secret_key");
 
         initializeChannel();
         

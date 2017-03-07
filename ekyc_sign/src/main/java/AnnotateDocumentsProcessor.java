@@ -246,7 +246,6 @@ public class AnnotateDocumentsProcessor implements RequestProcessor{
 
     public JSONObject processRequest(String payload) {
         System.out.println("--PROCESSING PAYLOAD ----");
-        System.out.println(payload);
         JSONObject jsonObject = AnnotateDocumentsProcessor.decodeJson(payload);
         JSONObject result = null;
         String rid = (String) jsonObject.get("rid");
