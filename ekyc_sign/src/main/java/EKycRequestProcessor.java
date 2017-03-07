@@ -42,7 +42,8 @@ import org.xml.sax.InputSource;
 
 
 
-public final class ProcessEKycRequest {
+
+public final class EKycRequestProcessor implements RequestProcessor {
 	private static final String JCE_PROVIDER = "BC";
 	private static final String algorithm = "SHA-256";
 	private static final String SECURITY_PROVIDER = "BC";
@@ -154,10 +155,11 @@ public final class ProcessEKycRequest {
 		return "";
 	}
 
-	public static String[] generateEncryptedPayload(String pl) {
+	public JSONObject processRequest (String pl) {
+		JSONObject response = new JSONObject();
 		try {
 			Security.addProvider(new BouncyCastleProvider());
-			JSONObject jsObj = ProcessEKycRequest.decodeJson(pl);
+			JSONObject jsObj = EKycRequestProcessor.decodeJson(pl);
 			String data = (String)jsObj.get("pid");
 			String payload = (String)jsObj.get("xml");
 		//String payload = "%skey%\n%hmac%\n%pid%";
@@ -173,26 +175,17 @@ public final class ProcessEKycRequest {
 			Cipher pkCipher = Cipher.getInstance(ASYMMETRIC_ALGO, JCE_PROVIDER);
 			pkCipher.init(Cipher.ENCRYPT_MODE, publicKey);
 			byte[] encSessionKey = pkCipher.doFinal(symmKey);
-			byte[] finalDataBlock = ProcessEKycRequest.encryptWithSessionKey(symmKey, data.getBytes());
-			byte[] hashedData = ProcessEKycRequest.hashPayload(data.getBytes());
-			byte[] hmac = ProcessEKycRequest.encryptWithSessionKey(symmKey, hashedData);   
+			byte[] finalDataBlock = EKycRequestProcessor.encryptWithSessionKey(symmKey, data.getBytes());
+			byte[] hashedData = EKycRequestProcessor.hashPayload(data.getBytes());
+			byte[] hmac = EKycRequestProcessor.encryptWithSessionKey(symmKey, hashedData);   
 			payload = payload.replace("%pid%",new String(Base64.encodeBase64(finalDataBlock)));
 			payload = payload.replace("%hmac%",new String(Base64.encodeBase64(hmac)));
 			payload = payload.replace("%skey%",new String(Base64.encodeBase64(encSessionKey)));
-			String[] response = {payload, (String)jsObj.get("id")};
-			System.out.println(payload);
-			return response;
-			
-		} catch(Exception ex) {System.out.println(ex.getMessage());};
-		String[] response = {"",""};
+			response.put("message", payload);
+			response.put("topic", (String)jsObj.get("id"));
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
 		return response;
 	}
-    /*
-	public static void main(String args[]) {
-	 ProcessEKycRequest req = new ProcessEKycRequest();
-		String data1 = "<Pid ts=\"2016-04-29T19:15:00\" ver=\"1.0\"><Demo lang=\"\"></Demo><Pv otp=\"374159\"/></Pid>";
-        String[] response = req.generateEncryptedPayload(data1);
-	}
-	*/	
-
 }

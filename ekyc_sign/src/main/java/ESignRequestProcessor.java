@@ -10,7 +10,7 @@ import org.json.simple.*;
 import org.json.simple.parser.*;
 import scala.util.parsing.json.JSON;
 
-public final class ProcessESignRequest {
+public final class ESignRequestProcessor implements RequestProcessor {
 
     private static final ExecutorService threadpool = Executors.newFixedThreadPool(10);
     private static final String documentHashFileSuffix = "-hash";
@@ -18,7 +18,7 @@ public final class ProcessESignRequest {
 
 
 
-    public static JSONObject esign(String payload) {
+    public JSONObject processRequest (String payload) {
 	JSONObject response = new JSONObject();
         try {
             JSONObject jsObj = EsignUtil.decodeJson(payload);
@@ -42,7 +42,7 @@ public final class ProcessESignRequest {
             while (iterator.hasNext()) {
 
                 final JSONObject fileObject = iterator.next();
-                String url = (String) fileObject.get("generated_url");
+                String url = (String) fileObject.get("attestable_url");
                 String reason = (String) fileObject.get("reason");
                 String filename = EsignUtil.getFileNameFromUrl(url);
                 Future eSignInputsFuture = threadpool.submit(new Callable<eSignInputs>() {
@@ -99,7 +99,7 @@ public final class ProcessESignRequest {
                        public void run() {
 
                            try {
-                               String documentUrl = (String)document.get("generated_url");
+                               String documentUrl = (String)document.get("attestable_url");
                                String filename = EsignUtil.getFileNameFromUrl(documentUrl);
                                String hashFilename = filename.substring(0, filename.lastIndexOf(".")) + documentHashFileSuffix + ".txt";
                                File hashFile = new File("src/main/resources/hash-files/" + hashFilename);
@@ -146,7 +146,7 @@ public final class ProcessESignRequest {
                 i = 0;
                 while (itr.hasNext()) {
                     final String data = itr.next();
-                    final String url = (String)documentsList.get(i).get("generated_url");
+                    final String url = (String)documentsList.get(i).get("attestable_url");
                     final String filename = EsignUtil.getFileNameFromUrl(url);
                     final String documentId = (String)documentsList.get(i).get("id");
                     documentHashFutureList.get(i).get();
@@ -210,6 +210,9 @@ public final class ProcessESignRequest {
 
 
         System.out.println(">>>>> sending response = " + response.toJSONString());
-        return response;
+        JSONObject finalResponse = new JSONObject();
+        finalResponse.put("topic", (String) response.get("topic"));
+        finalResponse.put("message", response.toString());
+        return finalResponse;
     }
 }

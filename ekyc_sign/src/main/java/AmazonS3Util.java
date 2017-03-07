@@ -1,4 +1,7 @@
+import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -8,24 +11,27 @@ import java.net.URI;
 import java.net.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import com.amazonaws.ClientConfiguration;
 
 /**
  * Created by Sahil on 14/02/17.
  */
 public class AmazonS3Util {
 
-    private static final BasicAWSCredentials s3Credentials = new BasicAWSCredentials(System.getProperty("aws.access.key"), System.getProperty("aws.access.secret"));
+    private static final BasicAWSCredentials s3Credentials = new BasicAWSCredentials(ReceiveRequest.AWS_ACCESS_KEY, ReceiveRequest.AWS_SECRET_KEY);
     private static final AmazonS3Client s3Client = new AmazonS3Client(s3Credentials);
     private static final String downloadFolder = "src/main/resources/downloads";
     private static final String uploadFolder = "src/main/resources/uploads";
-    private static final String defaultS3BucketName = "docs-indifi-staging";
+    private static final String defaultS3BucketName = ReceiveRequest.S3_BUCKET;
     private static final String documentHashFolder = "src/main/resources/hash-files";
     private static final String esignResponseFolder = "src/main/resources/response-files";
     private static final String responseS3BucketKey = "esign-response";
-    private static final String s3BucketName = "docs-indifi-staging";
+    private static final String s3BucketName = ReceiveRequest.S3_BUCKET;
     private static final String esignDocumentSuffix = "-esign";
+    private static final ClientConfiguration clientConfiguration = new ClientConfiguration();
 
     public static void downloadESignFile(String fileName, String httpUrl) {
+        clientConfiguration.setMaxConnections(1000);
 
         try {
             File destinationFile = new File(downloadFolder + "/" + fileName);
@@ -73,6 +79,21 @@ public class AmazonS3Util {
 
     }
 
+    public static String uploadFile(String fileName) {
+        String url = null;
+        try {
+            File sourceFile = new File(uploadFolder + "/" + fileName);
+            String s3BucketKey = fileName;
+            PutObjectRequest putObjectRequest = new PutObjectRequest(s3BucketName, s3BucketKey, sourceFile);
+            s3Client.putObject(putObjectRequest);
+            url = s3Client.getResourceUrl(s3BucketName, s3BucketKey);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return url;
+
+    }
+
     public static String uploadESignResponse(String fileName, String httpUrl) {
 
         try {
@@ -101,7 +122,7 @@ public class AmazonS3Util {
             GetObjectRequest getObjectRequest = new GetObjectRequest(s3BucketName, url.getPath().substring(1));
             s3Client.getObject(getObjectRequest, destinationFile);
         } catch (Exception e) {
-            System.out.println("exception is " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

@@ -84,7 +84,9 @@ import com.itextpdf.text.*;
 import org.json.simple.*;
 import org.json.simple.parser.*;
 
-public class PdfGenerator {
+//import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
+public class DocumentsRequestProcessor implements RequestProcessor {
 
 	public static JSONObject decodeJson(String data) {
 		try {
@@ -95,9 +97,9 @@ public class PdfGenerator {
 		} catch(Exception ex) {return null;}
 	}
 
-	public static JSONObject generatePdf(String payload) {
+	public JSONObject processRequest(String payload) {
 		System.out.println(payload);
-		JSONObject jsObj = PdfGenerator.decodeJson(payload);
+		JSONObject jsObj = DocumentsRequestProcessor.decodeJson(payload);
 		String[] imageFormats = {"jpg","jpeg","png","tif","bmp","gif","svg","tiff"};
 		String borrower_name = ((String)jsObj.get("business_name"));
 		JSONObject doc = (JSONObject)jsObj.get("document");
@@ -178,6 +180,9 @@ public class PdfGenerator {
         jsonObject.put("id", documentId);
         doc.put("generated_url", httpUrl);
         jsonObject.put("document", doc);
-        return jsonObject;
+        JSONObject response = new JSONObject();
+        response.put("message", jsonObject.toString());
+        response.put("topic", "process_generated_pdf");
+        return response;
 	}
 }
