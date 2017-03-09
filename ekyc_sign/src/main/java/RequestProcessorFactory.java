@@ -12,7 +12,7 @@ public class RequestProcessorFactory {
             	requestProcessor = new AnnotateDocumentsProcessor();
             	break;
             case ReceiveRequest.LOAN_AGREEMENT_TOPIC:
-            	requestProcessor = new AnnotateDocumentsProcessor();
+            	requestProcessor = new LoanAgreementProcessor();
             	break;
         }
         return requestProcessor;

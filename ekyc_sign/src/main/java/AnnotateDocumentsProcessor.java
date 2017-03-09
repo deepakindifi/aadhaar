@@ -108,6 +108,8 @@ import scala.util.parsing.combinator.testing.Str;
 
 
 
+
+
 //import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 public class AnnotateDocumentsProcessor implements RequestProcessor{
@@ -128,24 +130,35 @@ public class AnnotateDocumentsProcessor implements RequestProcessor{
 	public static void annotateFile(JSONObject file) throws Exception {
         String filename = (String)file.get("file_name");
         JSONArray annotationsJSArray = (JSONArray) file.get("annotations");
+        
         String[] annotations = new String[annotationsJSArray.size()];
         for(int i=0;i<annotationsJSArray.size();i++) {
             annotations[i]= (String)annotationsJSArray.get(i);
         }
         String fileUrl = (String)file.get("file_url");
+        String password = null;
+        if(file.containsKey("file_password")) {
+            password = (String)file.get("file_password");
+        }
         AmazonS3Util.downloadFile(filename, fileUrl);
         filename = convertToPdfIfImage(filename);
         file.put("file_name", filename);
-        PdfReader reader;
+        CustomReader reader;
         PdfStamper stamper;
         BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED);
-        reader  = new PdfReader(downloadPath + filename);
+        
+        if(password == null) {
+             reader  = new CustomReader(downloadPath + filename);
+        } else {
+            reader = new CustomReader(downloadPath + filename, password.getBytes());
+        }
         reader.unethicalreading = true;
+        reader.decryptOnPurpose();
         stamper = new PdfStamper(reader, new FileOutputStream(tempPath + filename));
         int total = reader.getNumberOfPages() + 1;
         for(int l = 0; l<=1; l++) {
             if(l == 1) {
-                reader = new PdfReader(tempPath + filename);
+                reader = new CustomReader(tempPath + filename);
                 reader.unethicalreading = true;
                 stamper = new PdfStamper(reader, new FileOutputStream(uploadPath + filename));
             }
@@ -246,8 +259,10 @@ public class AnnotateDocumentsProcessor implements RequestProcessor{
 
     public JSONObject processRequest(String payload) {
         System.out.println("--PROCESSING PAYLOAD ----");
+        StringWriter errors = new StringWriter();
         JSONObject jsonObject = AnnotateDocumentsProcessor.decodeJson(payload);
-        JSONObject result = null;
+        JSONObject result = new JSONObject();
+        Boolean error = false;
         String rid = (String) jsonObject.get("rid");
         JSONArray files = (JSONArray) jsonObject.get("files");
         Iterator<JSONObject> iterator = files.iterator();
@@ -256,152 +271,30 @@ public class AnnotateDocumentsProcessor implements RequestProcessor{
             try {
                 annotateFile(file);
             } catch (Exception e) {
+                error = true;
                 e.printStackTrace();
+                e.printStackTrace(new PrintWriter(errors));
             }
         }
         try {
             result = mergeFiles(files, rid);
         } catch (Exception e) {
+            error = true;
             e.printStackTrace();
+            e.printStackTrace(new PrintWriter(errors));
         }
         JSONObject response = new JSONObject();
         response.put("topic", rid);
+        if(error == true) {
+            result.put("error", errors.toString());
+        } 
         response.put("message", result.toString());
         System.out.println("---MESSAGE PROCESSED -----");
         return response;
     }
 
 
-	public static String[] annotate(String payload) throws Exception {
-		System.out.println(payload);
-		JSONObject jsObj = AnnotateDocumentsProcessor.decodeJson(payload);
-		String rid = (String)jsObj.get("rid");
-		String annotationsStr = ((String)jsObj.get("annotation"));
-		String[] annotation = new String[0];
-		if(annotationsStr != null && annotationsStr.length() > 1) {
-			annotation = annotationsStr.split("\\|");
-		}
-		System.out.println(annotation.length);
-		String[] all_files = ((String)jsObj.get("all_files")).split("\\|");
-		for(int i = 0; i < all_files.length; i++) {
-			String filename = all_files[i];
-			System.out.println(filename);
-			PdfReader reader;
-			PdfStamper stamper;
-			reader  = new PdfReader("/home/ubuntu/downloads/" + filename);
-			reader.unethicalreading = true;
-			stamper = new PdfStamper(reader, new FileOutputStream("/home/ubuntu/uploads/" + filename));
-			BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED);
-			int total = reader.getNumberOfPages() + 1;
-			for (int l = 0; l <= 1; l++) {
-				if(l == 0) {
-					reader  = new PdfReader("/home/ubuntu/downloads/" + filename);
-					reader.unethicalreading = true;
-					stamper = new PdfStamper(reader, new FileOutputStream("/home/ubuntu/upload/" + filename));
-				} else {
-					reader  = new PdfReader("/home/ubuntu/upload/" + filename);
-					reader.unethicalreading = true;
-					stamper = new PdfStamper(reader, new FileOutputStream("/home/ubuntu/uploads/" + filename));
-				}
-				PdfContentByte under, over;
-				String actualAnnotation = "";
-				stamper.setRotateContents(false);
-				for(int j = 1; j < total; j++) {
-					over = stamper.getOverContent(j);
-					over.beginText();
-					if(l == 0) {
-						if(!filename.equals("loanagreement-nikon.pdf") && !filename.startsWith("demand_promis") && !filename.equals("loanagreement-edelweiss.pdf") && annotation.length != 0) {
-							float percentage = 0.85f;
-							PdfDictionary page = reader.getPageN(j);
-							float offsetX = (reader.getPageSize(j).getWidth() * (1 - percentage)) / 2;
-							float offsetY = (reader.getPageSize(j).getHeight() * (1 - percentage)) / 2;
-							stamper.getUnderContent(j).setLiteral(String.format("\nq %s 0 0 %s %s %s cm\nq\n", percentage, percentage, offsetX, offsetY));						     }
-					} else {
-						int spacing = 20;
-						if(annotation.length == 1) {
-							spacing = 250;
-						}
-						if(annotation.length == 2) {
-							spacing = 150;
-						}
-						if(annotation.length == 3) {
-							spacing = 50;
-						}
-						for(int k = 0; k < annotation.length; k++) {
-							int space = Math.round(3 * 180f/annotation.length);
-							System.out.println(annotation[k]);
-							String annot = annotation[k];
-							String annot1 = "";
-							String[] annotPieces = annotation[k].split("for");
-							if(annotPieces.length > 1) {
-								annot1 = annot.substring(annot.indexOf("for") + 4);
-								annot = annotPieces[0];
-							}
-
-							over.endText();
-							over.beginText();
-							over.setFontAndSize(bf, 8);
-							if(annotation.length > 3) {
-								over.setFontAndSize(bf, 8);
-							}
-							over.setRGBColorFill(0,0,0);
-							over.setTextMatrix(spacing+10, 30);
-							over.showText(annot.substring(0,annot.indexOf(':')));
-							over.setFontAndSize(bf, 8);
-							over.setRGBColorFill(76,111,174);
-							over.setTextMatrix(spacing+10, 20);
-							if(annot1.equals("")) {
-								over.showText(annot.substring(annot.indexOf(':')+2));
-							}else {
-								over.showText(annot1);
-								over.setTextMatrix(spacing+10, 10);
-								over.showText("(" + annot.substring(annot.indexOf(':')+2) + ")");
-							}
-
-							spacing += space;
-
-						}
-					}
-					over.endText();
-				}
-				if(l == 1 && total%2 == 0) {
-					stamper.insertPage(reader.getNumberOfPages() + 1,reader.getPageSizeWithRotation(1));
-					over = stamper.getOverContent(total);
-					over.beginText();
-					over.setFontAndSize(bf, 18);
-					over.setRGBColorFill(0,0,0);
-					over.setTextMatrix(170, 450);
-					over.showText("This page is intentionally left blank.");
-					over.endText();
-
-				}
-				stamper.close();
-			}
-		}
-
-		Document document = new Document();
-		FileOutputStream outputStream = new FileOutputStream("/home/ubuntu/uploads/" + rid + ".pdf");
-		PdfCopy copy = new PdfSmartCopy(document, outputStream);
-		document.open();
-		for (String fil: all_files) {
-			PdfReader reader = new PdfReader("/home/ubuntu/uploads/" + fil);
-			copy.addDocument(reader);
-			reader.close();
-		}
-		document.close();
-		Process p1=Runtime.getRuntime().exec("scp /home/ubuntu/uploads/" + rid + ".pdf" + " " + ReceiveRequest.RABBITMQ_ADDRESS + ":/home/ubuntu/automated_deployment/indifi_source/arya/uploads/");
-		int exitValue = p1.waitFor();
-		BufferedReader stdError = new BufferedReader(new
-				InputStreamReader(p1.getErrorStream()));
-		System.out.println(exitValue);
-		String s = null;
-		while ((s = stdError.readLine()) != null) {
-			System.out.println(s);
-		}
-
-		String[] response = {"",rid};
-		return response;
-	}
+	
 
 	public static JSONObject mergeFiles(JSONArray files, String rid) throws Exception {
         Document document = new Document();
@@ -412,7 +305,7 @@ public class AnnotateDocumentsProcessor implements RequestProcessor{
         while(iterator.hasNext()) {
             final JSONObject fileObject = iterator.next();
             String filename = (String) fileObject.get("file_name");
-            PdfReader reader = new PdfReader(uploadPath + filename);
+            CustomReader reader = new CustomReader(uploadPath + filename);
             copy.addDocument(reader);
             copy.freeReader(reader);
             reader.close();
@@ -423,6 +316,20 @@ public class AnnotateDocumentsProcessor implements RequestProcessor{
         result.put("file_url", url);
         result.put("file_name", rid + ".pdf");
         return result;
+    }
+}
 
+
+
+
+class CustomReader extends PdfReader {
+    public CustomReader(String filename) throws IOException {
+            super(filename);
+    }
+    public CustomReader(String filename, byte password[]) throws IOException {
+            super(filename, password);
+    }
+    public void decryptOnPurpose() {
+        encrypted = false;
     }
 }

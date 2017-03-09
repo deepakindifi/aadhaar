@@ -76,6 +76,7 @@ public class ReceiveRequest {
             channel.queueBind(queueName, EXCHANGE_NAME, EKYC_TOPIC);
             channel.queueBind(queueName, EXCHANGE_NAME, ESIGN_TOPIC);
             channel.queueBind(queueName, EXCHANGE_NAME, GENERATE_DOCUMENTS_TOPIC);
+            channel.queueBind(queueName, EXCHANGE_NAME, LOAN_AGREEMENT_TOPIC);
             Consumer consumer = initializeConsumer(channel);
             channel.basicConsume(queueName, true, consumer);
             System.out.println("---- LISTENING ------");
