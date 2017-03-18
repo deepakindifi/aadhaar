@@ -1,17 +1,12 @@
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
 import java.io.File;
-import java.net.URI;
-import java.net.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import com.amazonaws.ClientConfiguration;
+import java.net.URL;
+import java.net.URLEncoder;
 
 /**
  * Created by Sahil on 14/02/17.

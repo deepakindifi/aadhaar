@@ -1,14 +1,22 @@
-import com.emudhra.esign.*;
-import java.io.*;
-import java.util.*;
+import com.emudhra.esign.ServiceReturn;
+import com.emudhra.esign.eSign;
+import com.emudhra.esign.eSignImpl;
+import com.emudhra.esign.eSignInputs;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-
-import org.json.simple.*;
-import org.json.simple.parser.*;
-import scala.util.parsing.json.JSON;
 
 public final class ESignRequestProcessor implements RequestProcessor {
 

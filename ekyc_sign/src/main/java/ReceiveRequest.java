@@ -1,22 +1,17 @@
 import com.rabbitmq.client.*;
-import org.json.simple.*;
-import java.awt.Color;
-import org.json.simple.parser.*;
-import java.io.*;
-import java.io.IOException;
-import java.util.Properties;
+import org.json.simple.JSONObject;
 
-import org.json.simple.*;
-import org.json.simple.parser.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 
 public class ReceiveRequest {
 
-    public static final String EXCHANGE_NAME = "indifi_durable";
-    public static final String EKYC_TOPIC = "ekyc_call";
-    public static final String ESIGN_TOPIC = "esign_call";
-    public static final String GENERATE_DOCUMENTS_TOPIC = "annotate_documents_pdf";
-    public static final String LOAN_AGREEMENT_TOPIC = "loan_agreement";
+    public static final String EKYC_QUEUE = "ekyc_call";
+    public static final String ESIGN_QUEUE = "esign_call";
+    public static final String GENERATE_DOCUMENTS_QUEUE = "annotate_documents_pdf";
+    public static final String LOAN_AGREEMENT_QUEUE = "loan_agreement";
 
     public static String NODE_MACHINE_ADDRESS;
     public static String RABBITMQ_HOST;
@@ -27,38 +22,6 @@ public class ReceiveRequest {
     public static String AWS_ACCESS_KEY;
     public static String AWS_SECRET_KEY;
 
-
-    public static void sendResponse(String message, String key) {
-        Connection connection = null;
-        Channel channel = null;
-        try {
-            ConnectionFactory factory = new ConnectionFactory();
-            factory.setHost(RABBITMQ_HOST);
-            factory.setUsername(RABBITMQ_USERNAME);
-            factory.setPassword(RABBITMQ_PASSWORD);
-            factory.setAutomaticRecoveryEnabled(true);
-            factory.setTopologyRecoveryEnabled(true);
-            connection = factory.newConnection();
-            channel = connection.createChannel();
-
-            channel.exchangeDeclare(EXCHANGE_NAME, "topic",true);
-
-            channel.basicPublish(EXCHANGE_NAME, key, null, message.getBytes("UTF-8"));
-            System.out.println(" [x] Sent '" + key + "':'" + message + "'");
-
-        }
-        catch  (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                }
-                catch (Exception ignore) {}
-            }
-        }
-    }
 
     private static void initializeChannel() {
         ConnectionFactory connectionFactory = new ConnectionFactory();
@@ -71,43 +34,53 @@ public class ReceiveRequest {
         try {
             Connection connection = connectionFactory.newConnection();
             channel = connection.createChannel();
-            channel.exchangeDeclare(EXCHANGE_NAME, "topic", true);
-            String queueName = channel.queueDeclare().getQueue();
-            channel.queueBind(queueName, EXCHANGE_NAME, EKYC_TOPIC);
-            channel.queueBind(queueName, EXCHANGE_NAME, ESIGN_TOPIC);
-            channel.queueBind(queueName, EXCHANGE_NAME, GENERATE_DOCUMENTS_TOPIC);
-            channel.queueBind(queueName, EXCHANGE_NAME, LOAN_AGREEMENT_TOPIC);
-            Consumer consumer = initializeConsumer(channel);
-            channel.basicConsume(queueName, true, consumer);
+            channel.basicQos(10);
+
+            initializeConsumer(channel, EKYC_QUEUE);
+            initializeConsumer(channel, ESIGN_QUEUE);
+            initializeConsumer(channel, GENERATE_DOCUMENTS_QUEUE);
+            initializeConsumer(channel, LOAN_AGREEMENT_QUEUE);
+
             System.out.println("---- LISTENING ------");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
     }
 
-    private static Consumer initializeConsumer(Channel channel) {
-        return new DefaultConsumer(channel) {
+    private static void initializeConsumer(Channel channel, String queueName) throws IOException {
+        channel.queueDeclare(queueName, true, false, false, null);
+
+        Consumer consumer = new DefaultConsumer(channel) {
             @Override
-            public void handleDelivery(String consumerTag, Envelope envelope,
-                                       AMQP.BasicProperties properties, byte[] body) throws IOException {
+            public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
+                AMQP.BasicProperties replyProps = new AMQP.BasicProperties
+                        .Builder()
+                        .correlationId(properties.getCorrelationId())
+                        .build();
 
-                System.out.println("message received");
-                String message = new String(body, "UTF-8");
-
-                RequestProcessorFactory requestProcessorFactory = new RequestProcessorFactory();
-                RequestProcessor requestProcessor = requestProcessorFactory.getRequestProcessor(envelope.getRoutingKey());
-                if(requestProcessor != null) {
-                    JSONObject response = requestProcessor.processRequest(message);
-                    ReceiveRequest.sendResponse((String)response.get("message"), (String)response.get("topic"));
+                System.out.println("Message Received");
+                String result = "";
+                try {
+                    String message = new String(body,"UTF-8");
+                    RequestProcessorFactory requestProcessorFactory = new RequestProcessorFactory();
+                    RequestProcessor requestProcessor = requestProcessorFactory.getRequestProcessor(queueName);
+                    if(requestProcessor != null) {
+                        JSONObject response = requestProcessor.processRequest(message);
+                        result = (String)response.get("message");
+                    }
                 }
-
-                System.out.println(" [x] Received '" + envelope.getRoutingKey() + "'");
-
+                catch (RuntimeException e){
+                    System.out.println(" [.] " + e.toString());
+                }
+                finally {
+                    channel.basicPublish("", properties.getReplyTo(), replyProps, result.getBytes("UTF-8"));
+                    System.out.println("Message Processed " + result);
+                }
             }
         };
-    }
 
+        channel.basicConsume(queueName, true, consumer);
+    }
 
     public static void main(String[] argv) throws Exception {
 
